@@ -13,12 +13,21 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <a class="brand" href="./" aria-label="Risulta home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a>
-    <nav aria-label="Primary navigation">
+    <nav class="desktop-navigation" aria-label="Primary navigation">
       <a href="features.html">Features</a>
       <a href="comparisons.html">Compare</a>
-      <a class="nav-secondary" href="https://github.com/baronunread/risulta/issues">Roadmap</a>
-      <a class="nav-secondary" href="#install">Install</a>
+      <a href="https://github.com/baronunread/risulta/issues">Roadmap</a>
+      <a href="#install">Install</a>
     </nav>
+    <details class="mobile-navigation">
+      <summary>Menu</summary>
+      <nav aria-label="Mobile navigation">
+        <a href="features.html">Features</a>
+        <a href="comparisons.html">Compare</a>
+        <a href="https://github.com/baronunread/risulta/issues">Roadmap</a>
+        <a href="#install">Install</a>
+      </nav>
+    </details>
   </header>
 
   <main id="main">
@@ -58,6 +67,24 @@
           <path class="chart-area" d="M0 166 C85 150 115 158 176 126 S282 142 352 101 S453 119 530 79 S650 105 720 61 S825 75 900 30 V180 H0Z"/>
           <path class="chart-line" d="M0 166 C85 150 115 158 176 126 S282 142 352 101 S453 119 530 79 S650 105 720 61 S825 75 900 30"/>
         </svg>
+        <div class="breakdown-grid">
+          <section aria-labelledby="pages-title">
+            <h3 id="pages-title">Top pages</h3>
+            <ol>
+              <li><span>/</span><strong>6,412</strong></li>
+              <li><span>/docs</span><strong>3,108</strong></li>
+              <li><span>/pricing</span><strong>1,927</strong></li>
+            </ol>
+          </section>
+          <section aria-labelledby="referrers-title">
+            <h3 id="referrers-title">Top referrers</h3>
+            <ol>
+              <li><span>Direct</span><strong>4,986</strong></li>
+              <li><span>github.com</span><strong>2,741</strong></li>
+              <li><span>google.com</span><strong>1,804</strong></li>
+            </ol>
+          </section>
+        </div>
       </div>
     </section>
 
@@ -83,9 +110,10 @@
         </ol>
       </div>
       <div class="terminal" role="region" aria-label="Installation command">
-        <div class="terminal-bar"><small>root@server</small></div>
+        <div class="terminal-bar"><small>root@server</small><button class="copy-button" type="button" data-copy-command>Copy command</button></div>
         <pre><code id="install-command">curl -fsSL https://baronunread.github.io/risulta-site/install.sh | sudo sh</code></pre>
         <p>Interactive · checksum verified · rerunnable for updates</p>
+        <span class="sr-only" role="status" aria-live="polite" data-copy-status></span>
       </div>
     </section>
   </main>
@@ -98,10 +126,44 @@
     <div class="footer-meta"><span>© 2026 Andrea Bruno</span><span><a href="https://github.com/baronunread/risulta/blob/main/LICENSE">AGPL server</a> · <a href="https://github.com/baronunread/risulta/blob/main/LICENSE-TRACKER">MIT tracker</a></span></div>
   </footer>
   <script>
+    const installCommand = document.querySelector("#install-command");
     if (location.protocol === "https:") {
       const installer = new URL("install.sh", document.baseURI).href;
-      document.querySelector("#install-command").textContent = `curl -fsSL ${installer} | sudo sh`;
+      installCommand.textContent = `curl -fsSL ${installer} | sudo sh`;
     }
+
+    const mobileNavigation = document.querySelector(".mobile-navigation");
+    mobileNavigation.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && mobileNavigation.open) {
+        mobileNavigation.open = false;
+        mobileNavigation.querySelector("summary").focus();
+      }
+    });
+    mobileNavigation.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => { mobileNavigation.open = false; });
+    });
+
+    const copyButton = document.querySelector("[data-copy-command]");
+    const copyStatus = document.querySelector("[data-copy-status]");
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(installCommand.textContent);
+        copyButton.textContent = "Copied";
+        copyStatus.textContent = "Install command copied.";
+        window.setTimeout(() => {
+          copyButton.textContent = "Copy command";
+          copyStatus.textContent = "";
+        }, 2000);
+      } catch {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(installCommand);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        copyButton.textContent = "Select command";
+        copyStatus.textContent = "Copy failed. The install command is selected for you.";
+      }
+    });
   </script>
 </body>
 </html>
