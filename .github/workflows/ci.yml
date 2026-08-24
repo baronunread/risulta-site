@@ -14,6 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check installer syntax
-        run: sh -n install.sh
-      - name: Check required site files
-        run: test -s index.html && test -s features.html && test -s comparisons.html && test -s roadmap.html && test -s styles.css && test -s install.sh
+        run: sh -n public/install.sh
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - name: Check required build files
+        run: test -s dist/index.html && test -s dist/install.sh && test -s dist/favicon.svg
