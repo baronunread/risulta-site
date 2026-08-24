@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check installer syntax
+        run: sh -n install.sh
+      - name: Check required site files
+        run: test -s index.html && test -s features.html && test -s comparisons.html && test -s roadmap.html && test -s privacy.html && test -s terms.html && test -s styles.css && test -s install.sh
