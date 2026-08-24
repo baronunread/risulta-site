@@ -35,11 +35,16 @@ It creates `/usr/local/bin/risulta`, a locked-down `risulta` system user,
 `/var/lib/risulta`, `/etc/risulta/risulta.env`, and a hardened systemd service.
 On a fresh installation it asks for the first administrator credentials, waits
 for successful bootstrap, and then removes their plaintext values from disk.
+Rerunning it preserves the database and administrator, detects the saved domain,
+port, and Caddy choice, and offers to reuse those settings.
 
 If Caddy setup is selected, the installer uses the official stable Debian
 package and writes only `/etc/caddy/sites/risulta.caddy`. It adds a single
 `import sites/*` line to the main Caddyfile when needed, validates the complete
 configuration, and reloads Caddy.
+If Caddy cannot start, Risulta remains installed and running; the installer
+prints Caddy's status, recent journal entries, and any processes occupying ports
+80 or 443 before explaining how to retry.
 
 ## Publish
 

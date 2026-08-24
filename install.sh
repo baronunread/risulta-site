@@ -7,7 +7,7 @@ ENV_DIR="/etc/risulta"
 ENV_FILE="$ENV_DIR/risulta.env"
 DATA_DIR="/var/lib/risulta"
 SERVICE_FILE="/etc/systemd/system/risulta.service"
-PORT="${RISULTA_PORT:-3000}"
+PORT="${RISULTA_PORT:-}"
 
 say() { printf '%s\n' "$*"; }
 fail() { say "Error: $*" >&2; exit 1; }
@@ -38,6 +38,24 @@ secret() {
 env_quote() {
   printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
 }
+saved_setting() {
+  key="$1"
+  [ -r "$ENV_FILE" ] || return 0
+  sed -n "s/^${key}=\"\(.*\)\"$/\1/p" "$ENV_FILE" | tail -n 1
+}
+caddy_failure() {
+  say ""
+  say "Caddy could not start. Risulta and its administrator account are still installed."
+  say "Caddy status:"
+  systemctl status caddy --no-pager -l >&2 || true
+  say "Recent Caddy logs:"
+  journalctl -u caddy -n 50 --no-pager >&2 || true
+  if command -v ss >/dev/null 2>&1; then
+    say "Processes listening on web ports:"
+    ss -ltnp '( sport = :80 or sport = :443 )' >&2 || true
+  fi
+  fail "Fix the Caddy error above, then rerun this installer; saved settings will be offered."
+}
 
 [ "$(id -u)" -eq 0 ] || fail "Run this installer as root: curl -fsSL <installer-url> | sudo sh"
 [ -r /dev/tty ] || fail "An interactive terminal is required. Download the script first if needed."
@@ -59,16 +77,42 @@ say ""
 fresh_install=1
 if [ -f "$DATA_DIR/control.db" ]; then
   fresh_install=0
-  say "Existing Risulta data found. The binary and service configuration will be updated."
+  say "Existing Risulta data and administrator found. They will not be replaced."
 fi
 
-domain="$(prompt "Analytics domain (for example, stats.example.com)")"
-case "$domain" in
-  ""|*://*|*/*|*:*|*' '*|*'{'*|*'}'*) fail "Enter a hostname only, without a scheme, port, path, or spaces." ;;
+saved_base_url="$(saved_setting RISULTA_BASE_URL)"
+saved_proxy="$(saved_setting RISULTA_TRUST_PROXY)"
+saved_port="$(saved_setting PORT)"
+[ -n "$PORT" ] || PORT="${saved_port:-3000}"
+case "$saved_proxy" in 1) ;; *) saved_proxy=0 ;; esac
+
+saved_domain=""
+case "$saved_base_url" in
+  https://*) saved_domain="${saved_base_url#https://}" ;;
+  http://*) saved_domain="${saved_base_url#http://}"; saved_domain="${saved_domain%:$PORT}" ;;
 esac
 
-use_caddy=0
-if confirm "Configure Caddy and automatic HTTPS for $domain?" y; then use_caddy=1; fi
+reuse_settings=0
+if [ -n "$saved_domain" ]; then
+  if [ "$saved_proxy" = "1" ]; then saved_caddy_label="yes"; else saved_caddy_label="no"; fi
+  say "Saved configuration: domain $saved_domain, port $PORT, Caddy $saved_caddy_label."
+  if confirm "Keep these settings?" y; then reuse_settings=1; fi
+fi
+
+if [ "$reuse_settings" -eq 1 ]; then
+  domain="$saved_domain"
+  use_caddy="$saved_proxy"
+else
+  domain="$(prompt "Analytics domain (for example, stats.example.com)" "$saved_domain")"
+  case "$domain" in
+    ""|*://*|*/*|*:*|*' '*|*'{'*|*'}'*) fail "Enter a hostname only, without a scheme, port, path, or spaces." ;;
+  esac
+
+  use_caddy=0
+  caddy_default="y"
+  [ "$saved_proxy" = "0" ] && caddy_default="n"
+  if confirm "Configure Caddy and automatic HTTPS for $domain?" "$caddy_default"; then use_caddy=1; fi
+fi
 
 if [ "$fresh_install" -eq 1 ]; then
   admin_email="$(prompt "Administrator email")"
@@ -193,7 +237,10 @@ if [ "$use_caddy" -eq 1 ]; then
     curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' -o /etc/apt/sources.list.d/caddy-stable.list
     chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg /etc/apt/sources.list.d/caddy-stable.list
     apt-get update
-    apt-get install -y caddy
+    if ! apt-get install -y caddy; then
+      command -v caddy >/dev/null 2>&1 || fail "The Caddy package could not be installed."
+      say "The package installed Caddy but its initial service start failed; applying the Risulta configuration before retrying."
+    fi
   fi
 
   install -d -m 0755 /etc/caddy/sites
@@ -211,7 +258,7 @@ if [ "$use_caddy" -eq 1 ]; then
   fi
   caddy validate --config /etc/caddy/Caddyfile
   systemctl enable caddy
-  systemctl reload-or-restart caddy
+  if ! systemctl reload-or-restart caddy; then caddy_failure; fi
 fi
 
 say ""
@@ -226,4 +273,3 @@ else
 fi
 say "Service status: systemctl status risulta"
 say "Logs: journalctl -u risulta"
-
