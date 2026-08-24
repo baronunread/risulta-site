@@ -15,8 +15,8 @@ python3 -m http.server 8080
 
 Open <http://localhost:8080>. The site has no build step or runtime dependency.
 
-Pages include the home page, detailed features, platform comparisons, public
-roadmap, privacy information, and terms.
+Pages include the home page, detailed features, and platform comparisons. The
+public roadmap links directly to the application repository's GitHub Issues.
 
 ## Installer
 

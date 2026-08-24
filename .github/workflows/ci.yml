@@ -16,4 +16,4 @@ jobs:
       - name: Check installer syntax
         run: sh -n install.sh
       - name: Check required site files
-        run: test -s index.html && test -s features.html && test -s comparisons.html && test -s roadmap.html && test -s privacy.html && test -s terms.html && test -s styles.css && test -s install.sh
+        run: test -s index.html && test -s features.html && test -s comparisons.html && test -s roadmap.html && test -s styles.css && test -s install.sh

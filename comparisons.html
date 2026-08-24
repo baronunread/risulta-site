@@ -1,16 +1,57 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Compare Risulta with Plausible, Umami, and Google Analytics."><meta name="theme-color" content="#f4f1e8"><title>Comparisons — Risulta</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare Risulta with Plausible, Umami, Fathom, and Google Analytics.">
+  <meta name="theme-color" content="#f4f1e8">
+  <title>Compare analytics platforms — Risulta</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header"><a class="brand" href="./" aria-label="Risulta home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a><nav aria-label="Primary navigation"><a href="features.html">Features</a><a href="comparisons.html" aria-current="page">Comparisons</a><a class="nav-secondary" href="index.html#install">Install</a><a class="nav-secondary" href="https://github.com/baronunread/risulta">GitHub</a></nav></header>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Risulta home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a>
+    <nav aria-label="Primary navigation"><a href="features.html">Features</a><a href="comparisons.html" aria-current="page">Compare</a><a class="nav-secondary" href="https://github.com/baronunread/risulta/issues">Roadmap</a><a class="nav-secondary" href="index.html#install">Install</a></nav>
+  </header>
+
   <main id="main">
-    <section class="page-hero"><p class="eyebrow">Comparisons</p><h1>Choose for the system<br><em>you actually want to run.</em></h1><p class="lede">Risulta optimizes for a very small self-hosted footprint. That makes it a strong fit for some websites—and the wrong tool for others.</p></section>
-    <section class="content-section"><header><h2>The practical differences.</h2><p>This comparison focuses on operating model and current product scope, not feature-count theatre. Product details were reviewed on August 24, 2026.</p></header><div class="comparison-wrap" role="region" aria-label="Analytics platform comparison" tabindex="0"><p class="table-hint">Scroll horizontally to compare every column →</p><table class="comparison"><thead><tr><th scope="col">Platform</th><th scope="col">Deployment</th><th scope="col">Storage</th><th scope="col">Visitor identity</th><th scope="col">Source model</th></tr></thead><tbody><tr class="risulta-row"><th scope="row">Risulta</th><td>One self-hosted Linux binary; Caddy optional</td><td>Embedded SQLite, separated per website</td><td>No cookies; daily anonymous hashes</td><td>AGPL server, MIT tracker</td></tr><tr><th scope="row">Plausible CE</th><td>Self-hosted containerized application stack</td><td>External application databases</td><td>Privacy-focused and cookie-free</td><td>AGPL Community Edition</td></tr><tr><th scope="row">Umami</th><td>Node.js application or Docker image</td><td>PostgreSQL</td><td>Privacy-focused, with configurable data collection</td><td>Open source</td></tr><tr><th scope="row">Google Analytics</th><td>Managed Google service</td><td>Google-hosted</td><td>First-party identifiers in its default web implementation</td><td>Proprietary service</td></tr></tbody></table></div>
-      <div class="honest-grid"><section><h2>Choose Risulta when…</h2><ul><li>You want analytics on one small VPS with minimal moving parts.</li><li>Simple traffic metrics are more useful than a large reporting suite.</li><li>You want multiple websites, one login, and locally controlled data.</li><li>You are comfortable operating backups, updates, and uptime.</li></ul></section><section><h2>Choose something else when…</h2><ul><li>You need funnels, goals, ecommerce revenue, geolocation, or campaign tooling today.</li><li>You need a managed service with support and no server responsibility.</li><li>Your traffic requires distributed storage or high-availability ingestion.</li><li>You need deep advertising attribution or integrations with an ad platform.</li></ul></section></div>
-      <p class="sources"><strong>Primary sources:</strong> <a href="https://plausible.io/self-hosted-web-analytics">Plausible self-hosting</a>, <a href="https://docs.umami.is/docs/install">Umami installation</a>, and <a href="https://support.google.com/analytics/answer/11593727">Google Analytics data collection</a>. Verify current vendor documentation before making a production decision.</p>
+    <section class="page-hero"><p class="eyebrow">Comparison</p><h1>How Risulta differs</h1><p class="lede">Risulta minimizes the software required for self-hosted pageview analytics. The tradeoff is a smaller feature set than mature analytics suites.</p></section>
+
+    <section class="content-section">
+      <header><h2>Deployment and tracker size</h2><p>Vendor-published tracker figures are not perfectly standardized: some state compressed transfer size and others state script size. The basis is shown instead of pretending they are identical measurements. Reviewed August 24, 2026.</p></header>
+      <div class="comparison-wrap" role="region" aria-label="Analytics platform comparison" tabindex="0">
+        <p class="table-hint">Scroll to compare every column →</p>
+        <table class="comparison">
+          <thead><tr><th scope="col">Platform</th><th scope="col">Deployment</th><th scope="col">Storage</th><th scope="col">Tracker</th><th scope="col">Visitor identity</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+            <tr class="risulta-row"><th scope="row">Risulta</th><td>One self-hosted Linux executable</td><td>Embedded SQLite, separated per website</td><td>441 B gzip</td><td>No cookies; daily anonymous hashes</td><td>AGPL server; MIT tracker</td></tr>
+            <tr><th scope="row">Plausible CE</th><td>Self-hosted container stack</td><td>PostgreSQL and ClickHouse</td><td>2.5 KB gzip</td><td>Cookie-free</td><td>AGPL Community Edition</td></tr>
+            <tr><th scope="row">Umami</th><td>Node.js application or Docker image</td><td>PostgreSQL</td><td>Under 2 KB, vendor-stated</td><td>Cookie-free by default</td><td>MIT</td></tr>
+            <tr><th scope="row">Fathom</th><td>Managed service</td><td>Vendor-hosted</td><td>2 KB, vendor-stated</td><td>Cookie-free</td><td>Proprietary service</td></tr>
+            <tr><th scope="row">Google Analytics 4</th><td>Managed Google service</td><td>Google-hosted</td><td>Configuration-dependent; about 135 KB through GTM in Plausible’s measurement</td><td>Uses first-party identifiers in its default web implementation</td><td>Proprietary service</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="fit-grid">
+        <section><h2>Risulta fits if</h2><ul><li>You want pageview analytics on one small VPS.</li><li>You operate multiple websites through one login.</li><li>SQLite and a narrow feature set are advantages.</li><li>You are responsible for backups, updates, and uptime.</li></ul></section>
+        <section><h2>Use another tool if</h2><ul><li>You need funnels, revenue, geolocation, replay, or campaign tooling now.</li><li>You want a managed service and support contract.</li><li>You need distributed ingestion or high availability.</li><li>You need advertising attribution or an integration catalog.</li></ul></section>
+      </div>
+
+      <section class="tracker-note"><h2>Why Risulta is smaller</h2><p>The tracker sends one pageview payload containing the path, referrer, and hostname. It uses browser-native APIs for initial loads and SPA navigation. Cookies, session management, visitor hashing, aggregation, replay, automatic element capture, and product analytics are not shipped to the browser.</p></section>
+
+      <p class="sources"><strong>Sources:</strong> <a href="https://plausible.io/privacy-focused-web-analytics">Plausible tracker size</a>, <a href="https://plausible.io/self-hosted-web-analytics">Plausible self-hosting</a>, <a href="https://docs.umami.is/docs">Umami documentation</a>, <a href="https://usefathom.com/">Fathom tracker size</a>, and <a href="https://support.google.com/analytics/answer/11593727">Google Analytics identifiers</a>. Risulta size is generated and measured from the released tracker source.</p>
     </section>
-    <section class="callout"><div><h2>Prefer the smaller system?</h2><p>One command installs the right binary, creates the administrator, and can configure automatic HTTPS.</p></div><a class="button" href="index.html#install">Install Risulta</a></section>
   </main>
-  <footer class="site-footer"><div class="footer-main"><div class="footer-about"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a><p>Simple, private web analytics in one binary.</p></div><div><h2>Product</h2><a href="features.html">Features</a><a href="comparisons.html">Comparisons</a><a href="index.html#install">Install</a><a href="roadmap.html">Roadmap</a></div><div><h2>Project</h2><a href="https://github.com/baronunread/risulta">GitHub</a><a href="https://github.com/baronunread/risulta/releases">Releases</a><a href="https://github.com/baronunread/risulta/blob/main/LICENSE">Server license</a><a href="https://github.com/baronunread/risulta/blob/main/LICENSE-TRACKER">Tracker license</a></div><div><h2>Information</h2><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/baronunread/risulta/issues">Support</a></div></div><div class="footer-meta"><span>© 2026 Andrea Bruno</span><span>Open source. No hosted-only edition.</span></div></footer>
-</body></html>
+
+  <footer class="site-footer">
+    <div class="footer-main">
+      <div class="footer-about"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a><p>Self-hosted web analytics in one binary.</p></div>
+      <nav class="footer-links" aria-label="Footer navigation"><a href="features.html">Features</a><a href="comparisons.html">Compare</a><a href="https://github.com/baronunread/risulta/issues">Roadmap</a><a href="https://github.com/baronunread/risulta">Source</a><a href="https://github.com/baronunread/risulta/releases">Releases</a></nav>
+    </div>
+    <div class="footer-meta"><span>© 2026 Andrea Bruno</span><span><a href="https://github.com/baronunread/risulta/blob/main/LICENSE">AGPL server</a> · <a href="https://github.com/baronunread/risulta/blob/main/LICENSE-TRACKER">MIT tracker</a></span></div>
+  </footer>
+</body>
+</html>

@@ -208,7 +208,8 @@ if ! id risulta >/dev/null 2>&1; then
   useradd --system --home-dir "$DATA_DIR" --shell /usr/sbin/nologin risulta
 fi
 install -d -m 0750 -o risulta -g risulta "$DATA_DIR" "$ENV_DIR"
-install -m 0755 "$tmp_dir/$artifact" "$INSTALL_PATH"
+install -m 0755 "$tmp_dir/$artifact" "$tmp_dir/risulta.new"
+mv -f "$tmp_dir/risulta.new" "$INSTALL_PATH"
 
 previous_umask="$(umask)"
 umask 077
@@ -257,7 +258,8 @@ WantedBy=multi-user.target
 UNIT
 
 systemctl daemon-reload
-systemctl enable --now risulta
+systemctl enable risulta
+systemctl restart risulta
 
 ready=0
 attempt=0

@@ -1,17 +1,67 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Explore Risulta's private, multi-site web analytics features."><meta name="theme-color" content="#f4f1e8"><title>Features — Risulta</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="What Risulta collects, reports, and requires to run.">
+  <meta name="theme-color" content="#f4f1e8">
+  <title>Features — Risulta</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header"><a class="brand" href="./" aria-label="Risulta home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a><nav aria-label="Primary navigation"><a href="features.html" aria-current="page">Features</a><a href="comparisons.html">Comparisons</a><a class="nav-secondary" href="index.html#install">Install</a><a class="nav-secondary" href="https://github.com/baronunread/risulta">GitHub</a></nav></header>
-  <main id="main">
-    <section class="page-hero"><p class="eyebrow">Features</p><h1>Small software.<br><em>Complete essentials.</em></h1><p class="lede">Risulta answers the common traffic questions without turning your analytics server into an infrastructure project.</p></section>
-    <section class="content-section"><header><h2>Understand the traffic that matters.</h2><p>One dashboard shows unique visitors, visits, pageviews, views per visit, current visitors, top pages, and top referrers across useful time ranges.</p></header><div class="detail-grid"><article class="detail-card"><span class="number">01</span><h3>Clear summaries</h3><p>Today, seven-day, and thirty-day views keep routine questions one selection away.</p></article><article class="detail-card"><span class="number">02</span><h3>Live signal</h3><p>See how many anonymous visitors were active during the last five minutes.</p></article><article class="detail-card"><span class="number">03</span><h3>Useful breakdowns</h3><p>Find the pages people visit and the sources that sent them—without building a report.</p></article></div></section>
-    <section class="content-section"><header><h2>One login for every website.</h2><p>Run a single Risulta instance for multiple domains. Administrators can see everything; viewer accounts can be restricted to selected websites.</p></header><div class="detail-grid"><article class="detail-card"><span class="number">04</span><h3>Per-site isolation</h3><p>Each website gets its own tracker key, domain verification, dashboard, and SQLite database.</p></article><article class="detail-card"><span class="number">05</span><h3>Practical access control</h3><p>Use administrator and viewer roles with site-level assignments from the dashboard.</p></article><article class="detail-card"><span class="number">06</span><h3>One process</h3><p>The collector, authentication, dashboards, and every configured website run together.</p></article></div></section>
-    <section class="content-section"><header><h2>Private by construction.</h2><p>The tracker sets no cookies. Risulta derives daily anonymous visitor hashes and does not retain raw IP addresses, preventing recognition across days.</p></header><div class="detail-grid"><article class="detail-card"><span class="number">07</span><h3>Tiny tracker</h3><p>The current keyed tracker is 638 bytes raw and 441 bytes compressed.</p></article><article class="detail-card"><span class="number">08</span><h3>No hidden telemetry</h3><p>Your Risulta server does not report usage back to a hosted control plane.</p></article><article class="detail-card"><span class="number">09</span><h3>Auditable source</h3><p>The server is AGPL-licensed and the embeddable tracker is MIT-licensed.</p></article></div></section>
-    <section class="content-section"><header><h2>Operations without a stack.</h2><p>Download one executable, keep one data directory, and use familiar systemd and Caddy configuration on a small Linux server.</p></header><div class="detail-grid"><article class="detail-card"><span class="number">10</span><h3>Single binary</h3><p>No Bun installation, container runtime, application dependencies, or external database at runtime.</p></article><article class="detail-card"><span class="number">11</span><h3>SQLite storage</h3><p>Control data lives in one database; analytics are separated into one database per website.</p></article><article class="detail-card"><span class="number">12</span><h3>Health and shutdown</h3><p>A health endpoint and clean process termination make routine service management predictable.</p></article></div></section>
-    <section class="callout"><div><h2>See where Risulta fits.</h2><p>Compare its deployment model and current scope with Plausible, Umami, and Google Analytics.</p></div><a class="button" href="comparisons.html">Compare analytics platforms</a></section>
-  </main>
-  <footer class="site-footer"><div class="footer-main"><div class="footer-about"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a><p>Simple, private web analytics in one binary.</p></div><div><h2>Product</h2><a href="features.html">Features</a><a href="comparisons.html">Comparisons</a><a href="index.html#install">Install</a><a href="roadmap.html">Roadmap</a></div><div><h2>Project</h2><a href="https://github.com/baronunread/risulta">GitHub</a><a href="https://github.com/baronunread/risulta/releases">Releases</a><a href="https://github.com/baronunread/risulta/blob/main/LICENSE">Server license</a><a href="https://github.com/baronunread/risulta/blob/main/LICENSE-TRACKER">Tracker license</a></div><div><h2>Information</h2><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/baronunread/risulta/issues">Support</a></div></div><div class="footer-meta"><span>© 2026 Andrea Bruno</span><span>Open source. No hosted-only edition.</span></div></footer>
-</body></html>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Risulta home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a>
+    <nav aria-label="Primary navigation"><a href="features.html" aria-current="page">Features</a><a href="comparisons.html">Compare</a><a class="nav-secondary" href="https://github.com/baronunread/risulta/issues">Roadmap</a><a class="nav-secondary" href="index.html#install">Install</a></nav>
+  </header>
 
+  <main id="main">
+    <section class="page-hero"><p class="eyebrow">Features</p><h1>What the binary does</h1><p class="lede">Risulta covers pageview analytics, multi-site access, and basic server operations. It deliberately omits product analytics, advertising attribution, and a managed control plane.</p></section>
+
+    <section class="content-section">
+      <header><h2>Reports</h2><p>Routine traffic questions are available without building custom reports.</p></header>
+      <dl class="feature-specs">
+        <div><dt>Summary</dt><dd>Unique visitors, visits, pageviews, and views per visit for today, seven days, or thirty days.</dd></div>
+        <div><dt>Current visitors</dt><dd>Anonymous visitors active during the last five minutes.</dd></div>
+        <div><dt>Breakdowns</dt><dd>Top pages and referrers for the selected period.</dd></div>
+      </dl>
+    </section>
+
+    <section class="content-section">
+      <header><h2>Websites and access</h2><p>One Risulta process can serve many domains without mixing their analytics.</p></header>
+      <dl class="feature-specs">
+        <div><dt>Multiple websites</dt><dd>Administrators manage every configured domain through one login.</dd></div>
+        <div><dt>Viewer accounts</dt><dd>Viewers can be restricted to selected websites.</dd></div>
+        <div><dt>Per-site isolation</dt><dd>Each website has its own tracker key, domain check, dashboard, and SQLite file.</dd></div>
+      </dl>
+    </section>
+
+    <section class="content-section">
+      <header><h2>Why the tracker is 441 bytes compressed</h2><p>The browser code records pageviews only. It leaves aggregation and anonymous visitor counting to the server.</p></header>
+      <dl class="feature-specs">
+        <div><dt>Native browser APIs</dt><dd>It uses fetch, history events, location, and document.referrer without a client library.</dd></div>
+        <div><dt>No identity package</dt><dd>There are no cookies, local storage, fingerprinting routines, or browser-side sessions.</dd></div>
+        <div><dt>No bundled product suite</dt><dd>It does not ship replay, feature flags, advertising tags, form capture, geolocation, or a general event SDK.</dd></div>
+      </dl>
+    </section>
+
+    <section class="content-section">
+      <header><h2>Server operation</h2><p>The released executable includes Bun, the HTTP server, dashboard, authentication, collector, and SQLite integration.</p></header>
+      <dl class="feature-specs">
+        <div><dt>Runtime</dt><dd>No Bun, Node.js, package manager, or external database is installed on the server.</dd></div>
+        <div><dt>Storage</dt><dd>Control data uses one SQLite database; analytics use one SQLite database per website.</dd></div>
+        <div><dt>Deployment</dt><dd>The installer registers a systemd service, verifies checksums, and can configure Caddy for HTTPS.</dd></div>
+      </dl>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-main">
+      <div class="footer-about"><a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>risulta</span></a><p>Self-hosted web analytics in one binary.</p></div>
+      <nav class="footer-links" aria-label="Footer navigation"><a href="features.html">Features</a><a href="comparisons.html">Compare</a><a href="https://github.com/baronunread/risulta/issues">Roadmap</a><a href="https://github.com/baronunread/risulta">Source</a><a href="https://github.com/baronunread/risulta/releases">Releases</a></nav>
+    </div>
+    <div class="footer-meta"><span>© 2026 Andrea Bruno</span><span><a href="https://github.com/baronunread/risulta/blob/main/LICENSE">AGPL server</a> · <a href="https://github.com/baronunread/risulta/blob/main/LICENSE-TRACKER">MIT tracker</a></span></div>
+  </footer>
+</body>
+</html>
