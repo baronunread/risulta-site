@@ -210,6 +210,7 @@ fi
 install -d -m 0750 -o risulta -g risulta "$DATA_DIR" "$ENV_DIR"
 install -m 0755 "$tmp_dir/$artifact" "$INSTALL_PATH"
 
+previous_umask="$(umask)"
 umask 077
 env_tmp="$tmp_dir/risulta.env"
 {
@@ -226,6 +227,7 @@ env_tmp="$tmp_dir/risulta.env"
   fi
 } > "$env_tmp"
 install -m 0600 "$env_tmp" "$ENV_FILE"
+umask "$previous_umask"
 
 cat > "$SERVICE_FILE" <<'UNIT'
 [Unit]
@@ -281,14 +283,18 @@ fi
 if [ "$use_caddy" -eq 1 ]; then
   install -d -m 0755 /etc/caddy/sites
   caddy_site="/etc/caddy/sites/risulta.caddy"
+  caddy_site_tmp="$tmp_dir/risulta.caddy"
   {
     printf '%s {\n' "$domain"
     printf '\tencode zstd gzip\n'
     printf '\treverse_proxy 127.0.0.1:%s\n' "$PORT"
     printf '}\n'
-  } > "$caddy_site"
+  } > "$caddy_site_tmp"
+  install -m 0644 "$caddy_site_tmp" "$caddy_site"
   if [ ! -f /etc/caddy/Caddyfile ]; then
-    printf 'import sites/*\n' > /etc/caddy/Caddyfile
+    caddyfile_tmp="$tmp_dir/Caddyfile"
+    printf 'import sites/*\n' > "$caddyfile_tmp"
+    install -m 0644 "$caddyfile_tmp" /etc/caddy/Caddyfile
   elif ! grep -Eq '^[[:space:]]*import[[:space:]]+sites/\*' /etc/caddy/Caddyfile; then
     printf '\nimport sites/*\n' >> /etc/caddy/Caddyfile
   fi
