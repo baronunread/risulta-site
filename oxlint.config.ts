@@ -1,6 +1,6 @@
 export default {
   ignorePatterns: [
-    ".agent/**", ".agents/**", ".claude/**", ".codex/**", ".continue/**", ".cursor/**", ".gemini/**", ".opencode/**", ".pi/**", ".roo/**", ".windsurf/**", "dist/**", "node_modules/**", "tools/oxlint/anti-slop/**",
+    ".agent/**", ".agents/**", ".claude/**", ".codex/**", ".continue/**", ".cursor/**", ".gemini/**", ".github/agents/**", ".github/skills/**", ".opencode/**", ".pi/**", ".roo/**", ".windsurf/**", "dist/**", "node_modules/**", "tools/oxlint/anti-slop/**",
   ],
   jsPlugins: [{ name: "anti-slop", specifier: "./tools/oxlint/anti-slop/index.ts" }],
   rules: {

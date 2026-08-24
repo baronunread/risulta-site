@@ -6,6 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <script>
+      try {
+        const preference = localStorage.getItem("theme");
+        const theme =
+          preference === "light" || preference === "dark"
+            ? preference
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.classList.add(theme);
+        document.documentElement.style.colorScheme = theme;
+      } catch {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
+    <style>
+      html,
+      body,
+      #root {
+        background: #fff;
+      }
+      html.dark,
+      html.dark body,
+      html.dark #root {
+        background: #000;
+      }
+    </style>
     <title>Risulta - Self-hosted web analytics in one binary</title>
   </head>
   <body>
