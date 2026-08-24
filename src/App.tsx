@@ -19,7 +19,7 @@ export function App() {
           <BarChart3 className="size-5 text-orange-500" />
           Risulta
         </a>
-        <nav className="flex gap-5 text-sm text-muted-foreground">
+        <nav aria-label="Main navigation" className="flex gap-5 text-sm text-muted-foreground">
           <a href="#features">Features</a>
           <a href="#why">Why Risulta</a>
           <a href="https://github.com/baronunread/risulta/issues">Roadmap</a>
@@ -173,7 +173,7 @@ export function App() {
           </a>
           <p className="mt-1">Private web analytics in one binary.</p>
         </div>
-        <nav className="flex flex-wrap gap-x-5 gap-y-2">
+        <nav aria-label="Footer navigation" className="flex flex-wrap gap-x-5 gap-y-2">
           <a href="#features">Features</a>
           <a href="#compare">Why Risulta</a>
           <a href="https://github.com/baronunread/risulta/issues">Roadmap</a>
