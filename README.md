@@ -41,7 +41,15 @@ port, and Caddy choice, and offers to reuse those settings.
 If Caddy setup is selected, the installer uses the official stable Debian
 package and writes only `/etc/caddy/sites/risulta.caddy`. It adds a single
 `import sites/*` line to the main Caddyfile when needed, validates the complete
-configuration, and reloads Caddy.
+configuration, and reloads Caddy. The guided setup also supports an existing
+host reverse proxy or direct HTTP for private and development networks. It
+detects installed proxy software and listeners on ports 80 and 443 to recommend
+the least disruptive choice.
+
+Docker is intentionally a separate deployment mode: putting only Caddy in a
+container would make `127.0.0.1` refer to that container rather than the host
+Risulta service. A Docker deployment should run both components on one Compose
+network.
 If Caddy cannot start, Risulta remains installed and running; the installer
 prints Caddy's status, recent journal entries, and any processes occupying ports
 80 or 443 before explaining how to retry.

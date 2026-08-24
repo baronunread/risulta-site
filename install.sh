@@ -43,6 +43,34 @@ saved_setting() {
   [ -r "$ENV_FILE" ] || return 0
   sed -n "s/^${key}=\"\(.*\)\"$/\1/p" "$ENV_FILE" | tail -n 1
 }
+detected_host_proxies() {
+  found=""
+  for proxy in caddy nginx apache2 httpd traefik haproxy; do
+    if command -v "$proxy" >/dev/null 2>&1; then found="$found $proxy"; fi
+  done
+  printf '%s' "${found# }"
+}
+choose_proxy_mode() {
+  default_choice="$1"
+  {
+    say ""
+    say "How should HTTPS be handled?"
+    say "  1) Install or configure Caddy automatically (recommended on a new server)"
+    say "  2) Use an existing host reverse proxy (nginx, Apache, Traefik, or Caddy)"
+    say "  3) Direct HTTP only (development or a private network)"
+    say ""
+    say "Docker deployment is kept separate so Risulta and its proxy can share one Compose network."
+  } > /dev/tty
+  while :; do
+    choice="$(prompt "Choose 1, 2, or 3" "$default_choice")"
+    case "$choice" in
+      1) printf '%s' caddy; return ;;
+      2) printf '%s' existing; return ;;
+      3) printf '%s' direct; return ;;
+      *) say "Enter 1, 2, or 3." > /dev/tty ;;
+    esac
+  done
+}
 caddy_failure() {
   say ""
   say "Caddy could not start. Risulta and its administrator account are still installed."
@@ -82,9 +110,14 @@ fi
 
 saved_base_url="$(saved_setting RISULTA_BASE_URL)"
 saved_proxy="$(saved_setting RISULTA_TRUST_PROXY)"
+saved_proxy_mode="$(saved_setting RISULTA_PROXY_MODE)"
 saved_port="$(saved_setting PORT)"
 [ -n "$PORT" ] || PORT="${saved_port:-3000}"
 case "$saved_proxy" in 1) ;; *) saved_proxy=0 ;; esac
+case "$saved_proxy_mode" in
+  caddy|existing|direct) ;;
+  *) if [ "$saved_proxy" = "1" ]; then saved_proxy_mode=caddy; else saved_proxy_mode=direct; fi ;;
+esac
 
 saved_domain=""
 case "$saved_base_url" in
@@ -94,24 +127,39 @@ esac
 
 reuse_settings=0
 if [ -n "$saved_domain" ]; then
-  if [ "$saved_proxy" = "1" ]; then saved_caddy_label="yes"; else saved_caddy_label="no"; fi
-  say "Saved configuration: domain $saved_domain, port $PORT, Caddy $saved_caddy_label."
+  case "$saved_proxy_mode" in
+    caddy) saved_mode_label="automatic Caddy" ;;
+    existing) saved_mode_label="existing reverse proxy" ;;
+    direct) saved_mode_label="direct HTTP" ;;
+  esac
+  say "Saved configuration: domain $saved_domain, port $PORT, $saved_mode_label."
   if confirm "Keep these settings?" y; then reuse_settings=1; fi
 fi
 
 if [ "$reuse_settings" -eq 1 ]; then
   domain="$saved_domain"
-  use_caddy="$saved_proxy"
+  proxy_mode="$saved_proxy_mode"
 else
   domain="$(prompt "Analytics domain (for example, stats.example.com)" "$saved_domain")"
   case "$domain" in
     ""|*://*|*/*|*:*|*' '*|*'{'*|*'}'*) fail "Enter a hostname only, without a scheme, port, path, or spaces." ;;
   esac
 
-  use_caddy=0
-  caddy_default="y"
-  [ "$saved_proxy" = "0" ] && caddy_default="n"
-  if confirm "Configure Caddy and automatic HTTPS for $domain?" "$caddy_default"; then use_caddy=1; fi
+  detected_proxies="$(detected_host_proxies)"
+  default_proxy_choice=1
+  if [ -n "$detected_proxies" ]; then
+    say "Detected host proxy software: $detected_proxies"
+    [ "$detected_proxies" = "caddy" ] || default_proxy_choice=2
+  fi
+  if command -v ss >/dev/null 2>&1; then
+    web_listeners="$(ss -H -ltnp '( sport = :80 or sport = :443 )' 2>/dev/null || true)"
+    if [ -n "$web_listeners" ]; then
+      say "Detected listeners on ports 80 or 443:"
+      say "$web_listeners"
+      [ -z "$detected_proxies" ] && default_proxy_choice=2
+    fi
+  fi
+  proxy_mode="$(choose_proxy_mode "$default_proxy_choice")"
 fi
 
 if [ "$fresh_install" -eq 1 ]; then
@@ -123,16 +171,19 @@ if [ "$fresh_install" -eq 1 ]; then
   [ "$admin_password" = "$admin_password_again" ] || fail "The passwords do not match."
 fi
 
-if [ "$use_caddy" -eq 1 ]; then
-  base_url="https://$domain"
-  listen_host="127.0.0.1"
-else
-  base_url="http://$domain:$PORT"
-  listen_host="0.0.0.0"
-fi
+case "$proxy_mode" in
+  caddy) base_url="https://$domain"; listen_host="127.0.0.1"; trust_proxy=1; use_caddy=1 ;;
+  existing) base_url="https://$domain"; listen_host="127.0.0.1"; trust_proxy=1; use_caddy=0 ;;
+  direct) base_url="http://$domain:$PORT"; listen_host="0.0.0.0"; trust_proxy=0; use_caddy=0 ;;
+  *) fail "Unknown proxy mode: $proxy_mode" ;;
+esac
 
 tmp_dir="$(mktemp -d /tmp/risulta-install.XXXXXX)"
-cleanup() { rm -rf "$tmp_dir"; }
+policy_created=0
+cleanup() {
+  if [ "$policy_created" -eq 1 ]; then rm -f /usr/sbin/policy-rc.d; fi
+  rm -rf "$tmp_dir"
+}
 trap cleanup EXIT HUP INT TERM
 download_base="https://github.com/$REPOSITORY/releases/latest/download"
 
@@ -166,7 +217,8 @@ env_tmp="$tmp_dir/risulta.env"
   printf 'PORT="%s"\n' "$(env_quote "$PORT")"
   printf 'DATA_DIR="%s"\n' "$(env_quote "$DATA_DIR")"
   printf 'RISULTA_BASE_URL="%s"\n' "$(env_quote "$base_url")"
-  printf 'RISULTA_TRUST_PROXY="%s"\n' "$use_caddy"
+  printf 'RISULTA_TRUST_PROXY="%s"\n' "$trust_proxy"
+  printf 'RISULTA_PROXY_MODE="%s"\n' "$proxy_mode"
   printf 'RISULTA_MAX_OPEN_SITES="32"\n'
   if [ "$fresh_install" -eq 1 ]; then
     printf 'RISULTA_ADMIN_EMAIL="%s"\n' "$(env_quote "$admin_email")"
@@ -227,22 +279,6 @@ if [ "$fresh_install" -eq 1 ]; then
 fi
 
 if [ "$use_caddy" -eq 1 ]; then
-  if ! command -v caddy >/dev/null 2>&1; then
-    say ""
-    say "Caddy is not installed. Installing the official stable package…"
-    command -v apt-get >/dev/null 2>&1 || fail "Automatic Caddy installation currently supports Debian and Ubuntu. Install Caddy, then run this script again."
-    apt-get update
-    apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl gnupg
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' -o /etc/apt/sources.list.d/caddy-stable.list
-    chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg /etc/apt/sources.list.d/caddy-stable.list
-    apt-get update
-    if ! apt-get install -y caddy; then
-      command -v caddy >/dev/null 2>&1 || fail "The Caddy package could not be installed."
-      say "The package installed Caddy but its initial service start failed; applying the Risulta configuration before retrying."
-    fi
-  fi
-
   install -d -m 0755 /etc/caddy/sites
   caddy_site="/etc/caddy/sites/risulta.caddy"
   {
@@ -256,6 +292,30 @@ if [ "$use_caddy" -eq 1 ]; then
   elif ! grep -Eq '^[[:space:]]*import[[:space:]]+sites/\*' /etc/caddy/Caddyfile; then
     printf '\nimport sites/*\n' >> /etc/caddy/Caddyfile
   fi
+
+  if ! command -v caddy >/dev/null 2>&1; then
+    say ""
+    say "Caddy is not installed. Installing the official stable package…"
+    command -v apt-get >/dev/null 2>&1 || fail "Automatic Caddy installation currently supports Debian and Ubuntu. Install Caddy, then run this script again."
+    apt-get update
+    apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl gnupg
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' -o /etc/apt/sources.list.d/caddy-stable.list
+    chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg /etc/apt/sources.list.d/caddy-stable.list
+    apt-get update
+    if [ ! -e /usr/sbin/policy-rc.d ]; then
+      # Prevent the package post-install hook from starting Caddy before the
+      # validated Risulta configuration is ready.
+      printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d
+      chmod 0755 /usr/sbin/policy-rc.d
+      policy_created=1
+    fi
+    if ! DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::=--force-confold install -y caddy; then
+      fail "The Caddy package could not be installed. Risulta remains available on 127.0.0.1:$PORT."
+    fi
+    if [ "$policy_created" -eq 1 ]; then rm -f /usr/sbin/policy-rc.d; policy_created=0; fi
+  fi
+
   caddy validate --config /etc/caddy/Caddyfile
   systemctl enable caddy
   if ! systemctl reload-or-restart caddy; then caddy_failure; fi
@@ -264,12 +324,24 @@ fi
 say ""
 say "Risulta is ready."
 say "Dashboard: $base_url"
-if [ "$use_caddy" -eq 1 ]; then
-  say "Caddy: configured for automatic HTTPS"
-  say "Make sure the DNS A/AAAA record for $domain points to this server."
-else
-  say "Caddy: skipped; Risulta is listening on $listen_host:$PORT"
-  say "Put a TLS reverse proxy in front of this port before using it on the public internet."
-fi
+case "$proxy_mode" in
+  caddy)
+    say "HTTPS: Caddy configured through its official package and systemd service."
+    say "Make sure the DNS A/AAAA record for $domain points to this server."
+    ;;
+  existing)
+    say "HTTPS: connect your existing host proxy to http://127.0.0.1:$PORT"
+    say "Set Host to the original host and X-Forwarded-Proto to https."
+    say "Caddyfile example:"
+    say "$domain {"
+    say "    reverse_proxy 127.0.0.1:$PORT"
+    say "}"
+    say "If your proxy runs in Docker, use a full Docker deployment instead; container localhost cannot reach this host service."
+    ;;
+  direct)
+    say "HTTPS: not configured; Risulta is listening on $listen_host:$PORT"
+    say "Use this only on a private network or add a TLS reverse proxy before public use."
+    ;;
+esac
 say "Service status: systemctl status risulta"
 say "Logs: journalctl -u risulta"
