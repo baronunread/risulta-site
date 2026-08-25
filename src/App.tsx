@@ -3,6 +3,8 @@ import { BarChart3, Check, Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
+const VERSION = "v0.3.1";
+
 export function App() {
   const [copied, setCopied] = useState(false);
   const copyInstallScript = async () => {
@@ -27,9 +29,12 @@ export function App() {
         </nav>
       </header>
       <section className="py-24">
-        <p className="text-sm font-medium text-orange-600">
-          Self-hosted · Multi-site · Open source
-        </p>
+        <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-orange-600">
+          <span>Self-hosted · Multi-site · Open source</span>
+          <a className="rounded-full border border-orange-200 px-2.5 py-1 text-xs text-orange-700 transition hover:bg-orange-50" href={`https://github.com/baronunread/risulta/releases/tag/${VERSION}`}>
+            {VERSION}
+          </a>
+        </div>
         <h1 className="mt-5 max-w-3xl text-5xl font-semibold tracking-tight sm:text-7xl">
           Web analytics you run yourself.
         </h1>
@@ -171,7 +176,7 @@ export function App() {
           <a className="font-semibold text-foreground" href="/">
             Risulta
           </a>
-          <p className="mt-1">Private web analytics in one binary.</p>
+          <p className="mt-1">Private web analytics in one binary. {VERSION}</p>
         </div>
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-x-5 gap-y-2">
           <a href="#features">Features</a>
