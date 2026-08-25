@@ -11,6 +11,24 @@ PORT="${RISULTA_PORT:-}"
 
 say() { printf '%s\n' "$*"; }
 fail() { say "Error: $*" >&2; exit 1; }
+step() {
+  label="$1"; shift
+  log="$tmp_dir/step.log"
+  if [ -t 1 ]; then
+    "$@" >"$log" 2>&1 & pid=$!
+    frames='|/-\\'; index=1
+    while kill -0 "$pid" 2>/dev/null; do
+      frame=$(printf '%s' "$frames" | cut -c "$index")
+      printf '\r%s %s' "$frame" "$label" > /dev/tty
+      index=$((index % 4 + 1)); sleep 1
+    done
+    wait "$pid" || { printf '\r' > /dev/tty; cat "$log" >&2; fail "$label failed."; }
+    printf '\r✓ %s\n' "$label" > /dev/tty
+  else
+    say "$label"
+    "$@" || fail "$label failed."
+  fi
+}
 prompt() {
   label="$1"; default="${2:-}"
   if [ -n "$default" ]; then printf '%s [%s]: ' "$label" "$default" > /dev/tty; else printf '%s: ' "$label" > /dev/tty; fi
@@ -102,10 +120,39 @@ say "Risulta installer"
 say "Private web analytics in one binary."
 say ""
 
+download_base="https://github.com/$REPOSITORY/releases/latest/download"
+manifest="$(curl --proto '=https' --tlsv1.2 -fsSL "$download_base/risulta-release.json" 2>/dev/null || true)"
+latest_version="$(printf '%s\n' "$manifest" | sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n 1)"
+[ -n "$latest_version" ] || fail "Unable to read release metadata. Try again later."
+installed_version=""
+if [ -x "$INSTALL_PATH" ]; then installed_version="$($INSTALL_PATH --version 2>/dev/null || true)"; fi
+say "Installed: ${installed_version:-not installed}"
+say "Available: $latest_version"
+if [ -n "$installed_version" ] && [ "$installed_version" = "$latest_version" ]; then
+  say "Risulta is up to date."
+  exit 0
+fi
+
 fresh_install=1
 if [ -f "$DATA_DIR/control.db" ]; then
   fresh_install=0
   say "Existing Risulta data and administrator found. They will not be replaced."
+fi
+
+release_breaking="$(printf '%s\n' "$manifest" | sed -n 's/.*"breaking"[[:space:]]*:[[:space:]]*\(true\|false\).*/\1/p' | head -n 1)"
+breaking_update=0
+if [ "$fresh_install" -eq 0 ] && [ -n "$installed_version" ]; then
+  installed_major="$(printf '%s' "$installed_version" | sed -n 's/^v\{0,1\}\([0-9][0-9]*\)\.\([0-9][0-9]*\).*/\1/p')"
+  installed_minor="$(printf '%s' "$installed_version" | sed -n 's/^v\{0,1\}[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/p')"
+  latest_major="$(printf '%s' "$latest_version" | sed -n 's/^v\{0,1\}\([0-9][0-9]*\)\.\([0-9][0-9]*\).*/\1/p')"
+  latest_minor="$(printf '%s' "$latest_version" | sed -n 's/^v\{0,1\}[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/p')"
+  if [ "$release_breaking" = true ] || { [ -n "$installed_major" ] && [ -n "$latest_major" ] && { [ "$latest_major" -gt "$installed_major" ] || { [ "$installed_major" -eq 0 ] && [ "$latest_minor" -gt "$installed_minor" ]; }; }; }; then
+    breaking_update=1
+    say ""
+    say "Breaking update: $installed_version to $latest_version"
+    say "A safety backup will be created before the service is replaced."
+    confirm "Continue with this breaking update?" n || exit 0
+  fi
 fi
 
 saved_base_url="$(saved_setting RISULTA_BASE_URL)"
@@ -185,12 +232,15 @@ cleanup() {
   rm -rf "$tmp_dir"
 }
 trap cleanup EXIT HUP INT TERM
-download_base="https://github.com/$REPOSITORY/releases/latest/download"
 
+if [ "$breaking_update" -eq 1 ]; then
+  command -v "$INSTALL_PATH" >/dev/null 2>&1 || fail "The installed binary cannot create the required safety backup."
+  install -d -m 0750 /var/backups/risulta
+  step "Creating safety backup" "$INSTALL_PATH" backup /var/backups/risulta
+fi
 say ""
-say "Downloading $artifact…"
-curl --proto '=https' --tlsv1.2 -fsSL "$download_base/$artifact" -o "$tmp_dir/$artifact"
-curl --proto '=https' --tlsv1.2 -fsSL "$download_base/$artifact.sha256" -o "$tmp_dir/$artifact.sha256"
+step "Downloading $artifact" curl --proto '=https' --tlsv1.2 -fsSL "$download_base/$artifact" -o "$tmp_dir/$artifact"
+step "Downloading checksum" curl --proto '=https' --tlsv1.2 -fsSL "$download_base/$artifact.sha256" -o "$tmp_dir/$artifact.sha256"
 (
   cd "$tmp_dir"
   if command -v sha256sum >/dev/null 2>&1; then
@@ -203,6 +253,7 @@ curl --proto '=https' --tlsv1.2 -fsSL "$download_base/$artifact.sha256" -o "$tmp
     fail "sha256sum or shasum is required to verify the download."
   fi
 )
+say "✓ Checksum verified"
 
 if ! id risulta >/dev/null 2>&1; then
   useradd --system --home-dir "$DATA_DIR" --shell /usr/sbin/nologin risulta
