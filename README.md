@@ -31,6 +31,11 @@ the matching binary and checksum from the latest `baronunread/risulta` GitHub
 release. Set `RISULTA_REPOSITORY=owner/repository` to test another release
 repository.
 
+Before replacing the binary, it shows the installed and available versions and
+exits without changes when they match. Downloads, checksum verification, and
+service startup use terminal progress indicators when the installer is run from
+an interactive terminal.
+
 It creates `/usr/local/bin/risulta`, a locked-down `risulta` system user,
 `/var/lib/risulta`, `/etc/risulta/risulta.env`, and a hardened systemd service.
 On a fresh installation it asks for the first administrator credentials, waits
