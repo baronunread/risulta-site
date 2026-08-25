@@ -16,11 +16,11 @@ step() {
   log="$tmp_dir/step.log"
   if [ -t 1 ]; then
     "$@" >"$log" 2>&1 & pid=$!
-    frames='|/-\\'; index=1
+    frames='▖▘▝▗'; index=1
     while kill -0 "$pid" 2>/dev/null; do
       frame=$(printf '%s' "$frames" | cut -c "$index")
       printf '\r%s %s' "$frame" "$label" > /dev/tty
-      index=$((index % 4 + 1)); sleep 1
+      index=$((index % 4 + 1)); sleep 0.12
     done
     wait "$pid" || { printf '\r' > /dev/tty; cat "$log" >&2; fail "$label failed."; }
     printf '\r✓ %s\n' "$label" > /dev/tty
