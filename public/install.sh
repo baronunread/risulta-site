@@ -143,10 +143,8 @@ release_breaking="$(printf '%s\n' "$manifest" | sed -n 's/.*"breaking"[[:space:]
 breaking_update=0
 if [ "$fresh_install" -eq 0 ] && [ -n "$installed_version" ]; then
   installed_major="$(printf '%s' "$installed_version" | sed -n 's/^v\{0,1\}\([0-9][0-9]*\)\.\([0-9][0-9]*\).*/\1/p')"
-  installed_minor="$(printf '%s' "$installed_version" | sed -n 's/^v\{0,1\}[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/p')"
   latest_major="$(printf '%s' "$latest_version" | sed -n 's/^v\{0,1\}\([0-9][0-9]*\)\.\([0-9][0-9]*\).*/\1/p')"
-  latest_minor="$(printf '%s' "$latest_version" | sed -n 's/^v\{0,1\}[0-9][0-9]*\.\([0-9][0-9]*\).*/\1/p')"
-  if [ "$release_breaking" = true ] || { [ -n "$installed_major" ] && [ -n "$latest_major" ] && { [ "$latest_major" -gt "$installed_major" ] || { [ "$installed_major" -eq 0 ] && [ "$latest_minor" -gt "$installed_minor" ]; }; }; }; then
+  if [ "$release_breaking" = true ] || { [ -n "$installed_major" ] && [ -n "$latest_major" ] && [ "$latest_major" -gt "$installed_major" ]; }; then
     breaking_update=1
     say ""
     say "Breaking update: $installed_version to $latest_version"
