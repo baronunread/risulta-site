@@ -9,7 +9,7 @@ export function App() {
   const [copied, setCopied] = useState(false);
   const copyInstallScript = async () => {
     await navigator.clipboard.writeText(
-      "curl -fsSL https://baronunread.github.io/risulta-site/install.sh | sudo sh",
+      "curl -fsSL https://raw.githubusercontent.com/baronunread/risulta/main/deploy/install.sh | sudo sh",
     );
     setCopied(true);
     window.setTimeout(() => setCopied(false), 2000);
@@ -49,8 +49,8 @@ export function App() {
             service. Run the same command whenever you want the newest version.
           </p>
           <div className="mt-4 flex flex-col gap-3 rounded-lg bg-background p-3 text-foreground sm:flex-row sm:items-center sm:justify-between">
-            <code className="min-w-0 break-all text-sm">
-              curl -fsSL https://baronunread.github.io/risulta-site/install.sh | sudo sh
+            <code className="min-w-0 overflow-x-auto whitespace-nowrap text-sm">
+              curl -fsSL https://raw.githubusercontent.com/baronunread/risulta/main/deploy/install.sh | sudo sh
             </code>
             <Button
               className="w-full shrink-0 justify-center sm:w-34"

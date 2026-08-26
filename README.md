@@ -1,11 +1,9 @@
 # Risulta site
 
-The static, multi-page website and interactive Linux installer for
-[Risulta](https://github.com/baronunread/risulta).
+The static, multi-page website for [Risulta](https://github.com/baronunread/risulta).
 
-It is written in semantic HTML and plain CSS, with one small inline script that
-updates the installer URL to match the deployed origin. There is no framework,
-package installation, build step, or client application runtime.
+The installer is maintained in the app repository and served from GitHub's raw
+content URL.
 
 ## Preview
 
@@ -23,7 +21,7 @@ public roadmap links directly to the application repository's GitHub Issues.
 The production command is:
 
 ```sh
-curl -fsSL https://baronunread.github.io/risulta-site/install.sh | sudo sh
+curl -fsSL https://raw.githubusercontent.com/baronunread/risulta/main/deploy/install.sh | sudo sh
 ```
 
 The installer supports Debian and Ubuntu on Linux x64 or arm64. It downloads
