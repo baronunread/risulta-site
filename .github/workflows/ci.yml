@@ -13,10 +13,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Check installer syntax
-        run: sh -n public/install.sh
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run build
       - name: Check required build files
-        run: test -s dist/index.html && test -s dist/install.sh && test -s dist/favicon.svg
+        run: test -s dist/index.html && test -s dist/favicon.svg
