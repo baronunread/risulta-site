@@ -128,3 +128,42 @@
     @apply font-sans;
   }
 }
+
+@keyframes fade-up {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* On-load hero stagger: plain CSS animation, universal browser support. */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-1,
+  .fade-2,
+  .fade-3 {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fade-up 0.3s ease-out forwards;
+  }
+  .fade-2 {
+    animation-delay: 0.06s;
+  }
+  .fade-3 {
+    animation-delay: 0.12s;
+  }
+}
+
+/* Scroll-driven reveal for section headings: progressive enhancement only,
+   so browsers without animation-timeline (or reduced-motion users) simply
+   see static content, never permanently hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      animation: fade-up 0.6s ease-out forwards;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+  }
+}
