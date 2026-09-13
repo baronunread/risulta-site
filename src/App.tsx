@@ -306,8 +306,8 @@ export function App() {
         </h2>
         <p className="mt-4 max-w-lg text-muted-foreground">
           Server, dashboard, tracker, installer: every line lives in one public repository under
-          AGPL-3.0 (the tracker script is MIT, so it's embeddable anywhere). There is no paid tier
-          hiding features from the free one.
+          AGPL-3.0 (the tracker script is MIT, so it's embeddable anywhere). No paid tier hides
+          features from the free one.
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <a
