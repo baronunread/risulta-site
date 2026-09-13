@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { BarChart3, Check, Copy, ExternalLink } from "lucide-react";
+import { Check, Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/logo";
 
-const VERSION = "v0.3.1";
+const VERSION = "v0.1.1";
 
 export function App() {
   const [copied, setCopied] = useState(false);
@@ -18,7 +19,7 @@ export function App() {
     <main className="mx-auto max-w-6xl px-6 py-8 sm:px-10">
       <header className="flex items-center justify-between">
         <a className="flex items-center gap-2 font-semibold" href="/">
-          <BarChart3 className="size-5 text-orange-500" />
+          <Logo className="size-5" />
           Risulta
         </a>
         <nav aria-label="Main navigation" className="flex gap-5 text-sm text-muted-foreground">
@@ -29,9 +30,9 @@ export function App() {
         </nav>
       </header>
       <section className="py-24">
-        <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-orange-600">
-          <span>Self-hosted · Multi-site · Open source</span>
-          <a className="rounded-full border border-orange-200 px-2.5 py-1 text-xs text-orange-700 transition hover:bg-orange-50" href={`https://github.com/baronunread/risulta/releases/tag/${VERSION}`}>
+        <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-muted-foreground">
+          <span>Self-hosted · Multi-site · AGPL-3.0</span>
+          <a className="rounded-full border px-2.5 py-1 text-xs text-foreground transition hover:bg-accent" href={`https://github.com/baronunread/risulta/releases/tag/${VERSION}`}>
             {VERSION}
           </a>
         </div>
@@ -39,8 +40,8 @@ export function App() {
           Web analytics you run yourself.
         </h1>
         <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-          One Linux binary serves the dashboard, collects pageviews, and keeps multiple websites in
-          SQLite. No cookies or external database.
+          One Linux binary serves the dashboard, collects pageviews, and keeps every website in its
+          own SQLite database. No cookies, no external database, no platform to manage.
         </p>
         <div id="install" className="mt-8 max-w-2xl rounded-xl border bg-card p-4 shadow-sm">
           <p className="text-sm font-medium">Install or update on Debian or Ubuntu</p>
@@ -63,13 +64,16 @@ export function App() {
             </Button>
           </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap items-center gap-4">
           <Button variant="outline" asChild>
             <a href="https://github.com/baronunread/risulta">
               <ExternalLink />
               Source code
             </a>
           </Button>
+          <p className="text-sm text-muted-foreground">
+            AGPL-3.0 server and dashboard; MIT tracker script. No open-core split.
+          </p>
         </div>
       </section>
       <figure className="overflow-hidden rounded-xl border bg-card shadow-2xl shadow-black/20">
@@ -81,7 +85,7 @@ export function App() {
       </figure>
       <section id="features" className="grid gap-6 py-24 md:grid-cols-2">
         <div>
-          <p className="text-sm font-medium text-orange-600">Included</p>
+          <p className="text-sm font-medium text-muted-foreground">Included</p>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight">What ships in the binary</h2>
         </div>
         <div className="grid gap-4">
@@ -96,9 +100,20 @@ export function App() {
             ],
             [
               "Cookie-free visitor counts",
-              "Use anonymous, daily-scoped hashes instead of browser identifiers.",
+              "Anonymous, daily-scoped hashes instead of browser identifiers.",
             ],
-            ["Auditable source", "Read the complete server and tracker code on GitHub."],
+            [
+              "Goals and funnels",
+              "Define conversion events and follow drop-off across ordered steps.",
+            ],
+            [
+              "Exportable reports",
+              "Bounded JSON and CSV reports with filters, dimensions, and pagination.",
+            ],
+            [
+              "Online backups",
+              "One authenticated call snapshots SQLite with an integrity-checked manifest.",
+            ],
           ].map(([title, description]) => (
             <Card key={title}>
               <CardHeader className="py-4">
@@ -149,7 +164,7 @@ export function App() {
       </section>
       <section id="compare" className="grid gap-6 py-20 md:grid-cols-[1fr_1.5fr]">
         <div>
-          <p className="text-sm font-medium text-orange-600">The difference</p>
+          <p className="text-sm font-medium text-muted-foreground">The difference</p>
           <h2 className="mt-4 text-4xl font-semibold tracking-tight">
             No analytics stack to operate.
           </h2>
@@ -173,10 +188,11 @@ export function App() {
       </section>
       <footer className="mt-24 flex flex-col gap-6 border-t py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <a className="font-semibold text-foreground" href="/">
+          <a className="flex items-center gap-2 font-semibold text-foreground" href="/">
+            <Logo className="size-4" />
             Risulta
           </a>
-          <p className="mt-1">Private web analytics in one binary. {VERSION}</p>
+          <p className="mt-1">Self-hosted web analytics in one binary. {VERSION}</p>
         </div>
         <nav aria-label="Footer navigation" className="flex flex-wrap gap-x-5 gap-y-2">
           <a href="#features">Features</a>
