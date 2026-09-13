@@ -302,12 +302,12 @@ export function App() {
       <section id="github" className="reveal py-24">
         <p className="text-sm font-medium text-muted-foreground">Open source</p>
         <h2 className="mt-4 max-w-lg text-4xl font-semibold tracking-tight">
-          Not open-core. The whole thing.
+          All of it is open source.
         </h2>
         <p className="mt-4 max-w-lg text-muted-foreground">
-          Server, dashboard, tracker, installer: every line lives in one public repository under
-          AGPL-3.0 (the tracker script is MIT, so it's embeddable anywhere). No paid tier hides
-          features from the free one.
+          The server, dashboard, tracker, and installer all live in one public repository under
+          AGPL-3.0 (the tracker script is MIT, so it's embeddable anywhere). Nothing is held back
+          for a paid tier.
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <a
