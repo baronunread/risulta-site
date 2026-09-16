@@ -178,12 +178,11 @@ export function App() {
             <p className="text-foreground">✓ dist/risulta-sprout, one file, no runtime</p>
           </div>
         </div>
-        <div className="mt-16 grid grid-cols-2 rounded-xl border bg-card sm:grid-cols-4">
+        <div className="mt-16 grid grid-cols-1 rounded-xl border bg-card sm:grid-cols-3">
           {[
-            { value: "5.6 MB", label: "About a fifth the size of the next-smallest self-hosted option", border: "border-r border-b sm:border-b-0" },
-            { value: "~5.1 ms", label: "Warm response time, p50 - what every request actually feels like", border: "border-b sm:border-b-0 sm:border-r" },
-            { value: "~100 ms", label: "Cold start, only on restart - it runs as a long-lived service", border: "border-r" },
-            { value: "~4,200 req/s", label: "Sustained ingest, one CPU core", border: "" },
+            { value: "5.6 MB", label: "About a fifth the size of the next-smallest self-hosted option", border: "border-b sm:border-b-0 sm:border-r" },
+            { value: "~5.1 ms", label: "Median response time in a local ingest benchmark", border: "border-b sm:border-b-0 sm:border-r" },
+            { value: "~100 ms", label: "Cold start, only on restart - it runs as a long-lived service", border: "" },
           ].map(({ value, label, border }) => (
             <div key={value} className={`p-6 ${border}`}>
               <p className="font-mono text-3xl font-semibold tracking-tight tabular-nums">{value}</p>
