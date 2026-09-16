@@ -180,7 +180,7 @@ export function App() {
         </div>
         <div className="mt-16 grid grid-cols-1 rounded-xl border bg-card sm:grid-cols-3">
           {[
-            { value: "5.6 MB", label: "About a fifth the size of the next-smallest self-hosted option", border: "border-b sm:border-b-0 sm:border-r" },
+            { value: "4.6 MB", label: "About a fifth the size of the next-smallest self-hosted option", border: "border-b sm:border-b-0 sm:border-r" },
             { value: "~5.1 ms", label: "Median response time in a local ingest benchmark", border: "border-b sm:border-b-0 sm:border-r" },
             { value: "~100 ms", label: "Cold start, only on restart - it runs as a long-lived service", border: "" },
           ].map(({ value, label, border }) => (
