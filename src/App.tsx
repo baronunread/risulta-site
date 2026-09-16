@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo } from "@/components/logo";
 
-const VERSION = "v0.1.2";
+const VERSION = "v0.1.4";
 
 export function App() {
   const [copied, setCopied] = useState(false);
@@ -57,7 +57,7 @@ export function App() {
               The smallest self-hosted analytics you can run.
             </h1>
             <p className="fade-2 mt-6 max-w-md text-lg text-muted-foreground">
-              A single 4.7 MB binary, no Docker, no database container, no Node runtime. Just the
+              A single 5.6 MB binary, no Docker, no database container, no Node runtime. Just the
               file and its data directory.
             </p>
             <div id="install" className="fade-3 mt-8 rounded-xl border bg-card p-4 shadow-sm">
@@ -95,12 +95,12 @@ export function App() {
           </div>
           <div className="fade-3 lg:justify-self-end">
             <p className="text-right font-mono leading-none">
-              <span className="text-7xl font-bold tracking-tight sm:text-8xl">4.7</span>
+              <span className="text-7xl font-bold tracking-tight sm:text-8xl">5.6</span>
               <span className="ml-2 text-2xl font-semibold text-muted-foreground">MB</span>
             </p>
             <div className="mt-7 grid gap-2.5 lg:w-80">
               {[
-                { name: "Risulta", value: "4.7 MB", pct: 4, self: true },
+                { name: "Risulta", value: "5.6 MB", pct: 4, self: true },
                 { name: "GoatCounter", value: "~25 MB", pct: 19 },
                 { name: "Plausible CE", value: "~58 MB*", pct: 45 },
                 { name: "Umami", value: "~130 MB*", pct: 100 },
@@ -180,10 +180,10 @@ export function App() {
         </div>
         <div className="mt-16 grid grid-cols-2 rounded-xl border bg-card sm:grid-cols-4">
           {[
-            { value: "4.7 MB", label: "About a fifth the size of the next-smallest self-hosted option", border: "border-r border-b sm:border-b-0" },
-            { value: "~4.5 ms", label: "Warm response time, p50 - what every request actually feels like", border: "border-b sm:border-b-0 sm:border-r" },
+            { value: "5.6 MB", label: "About a fifth the size of the next-smallest self-hosted option", border: "border-r border-b sm:border-b-0" },
+            { value: "~5.1 ms", label: "Warm response time, p50 - what every request actually feels like", border: "border-b sm:border-b-0 sm:border-r" },
             { value: "~100 ms", label: "Cold start, only on restart - it runs as a long-lived service", border: "border-r" },
-            { value: "~4,500 req/s", label: "Sustained ingest, one CPU core", border: "" },
+            { value: "~4,200 req/s", label: "Sustained ingest, one CPU core", border: "" },
           ].map(({ value, label, border }) => (
             <div key={value} className={`p-6 ${border}`}>
               <p className="font-mono text-3xl font-semibold tracking-tight tabular-nums">{value}</p>
