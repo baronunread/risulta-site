@@ -48,7 +48,7 @@ export function App() {
         <div className="grid gap-10 lg:grid-cols-[1.05fr_1fr] lg:items-center">
           <div className="min-w-0">
             <div className="fade-1 flex flex-wrap items-center gap-3 text-sm font-medium text-muted-foreground">
-              <span>Self-hosted · Multi-site · AGPL-3.0</span>
+              <span>Self-hosted · Multi-site</span>
               <a className="rounded-full border px-2.5 py-1 text-xs text-foreground transition hover:bg-accent" href={`https://github.com/baronunread/risulta/releases/tag/${VERSION}`}>
                 {VERSION}
               </a>
@@ -57,7 +57,7 @@ export function App() {
               The smallest self-hosted analytics you can run.
             </h1>
             <p className="fade-2 mt-6 max-w-md text-lg text-muted-foreground">
-              A single 5.6 MB binary, no Docker, no database container, no Node runtime. Just the
+               A single 4.6 MB binary, no Docker, no database container, no Node runtime. Just the
               file and its data directory.
             </p>
             <div id="install" className="fade-3 mt-8 rounded-xl border bg-card p-4 shadow-sm">
@@ -95,12 +95,12 @@ export function App() {
           </div>
           <div className="fade-3 lg:justify-self-end">
             <p className="text-right font-mono leading-none">
-              <span className="text-7xl font-bold tracking-tight sm:text-8xl">5.6</span>
+              <span className="text-7xl font-bold tracking-tight sm:text-8xl">4.6</span>
               <span className="ml-2 text-2xl font-semibold text-muted-foreground">MB</span>
             </p>
             <div className="mt-7 grid gap-2.5 lg:w-80">
               {[
-                { name: "Risulta", value: "5.6 MB", pct: 4, self: true },
+                { name: "Risulta", value: "4.6 MB", pct: 4, self: true },
                 { name: "GoatCounter", value: "~25 MB", pct: 19 },
                 { name: "Plausible CE", value: "~58 MB*", pct: 45 },
                 { name: "Umami", value: "~130 MB*", pct: 100 },
@@ -261,7 +261,7 @@ export function App() {
           <p className="mt-4 text-muted-foreground">
             Risulta favors a focused executable and local storage over containers, hosted accounts,
             and a separate database service. It's a self-hosted alternative to Plausible, Umami,
-            and GoatCounter without the open-core split.
+            and GoatCounter.
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
@@ -304,9 +304,8 @@ export function App() {
           All of it is open source.
         </h2>
         <p className="mt-4 max-w-lg text-muted-foreground">
-          The server, dashboard, tracker, and installer all live in one public repository under
-          AGPL-3.0 (the tracker script is MIT, so it's embeddable anywhere). Nothing is held back
-          for a paid tier.
+The server, dashboard, tracker, and installer all live in one public repository under
+           AGPL-3.0 (the tracker script is MIT).
         </p>
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <a
