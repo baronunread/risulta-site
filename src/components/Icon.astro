@@ -1,0 +1,11 @@
+---
+interface Props {
+  svg: string;
+  class?: string;
+}
+
+const { svg, class: className } = Astro.props;
+const html = className ? svg.replace('class="lucide', `class="${className} lucide`) : svg;
+---
+
+<Fragment set:html={html} />

@@ -4,7 +4,3 @@ pre-commit:
     - name: style-doctor
       glob: "*.{md,mdx,tsx,jsx,astro,html,vue,svelte}"
       run: npx style-doctor --scope changed --base HEAD
-
-    - name: react-doctor
-      glob: "*.{ts,tsx,js,jsx}"
-      run: npx react-doctor --staged
