@@ -10,11 +10,20 @@ changes.
 ## Preview
 
 ```sh
-npm run build
-python3 -m http.server 8080 --directory dist
+bun install
+bun run dev
 ```
 
-Open <http://localhost:8080>. The generated site is static and has no server runtime dependency.
+Open <http://localhost:4321>. This starts Astro's development server with live reload.
+
+To preview the generated production site instead:
+
+```sh
+bun run build
+bun run preview
+```
+
+The website uses Astro. The separate Risulta application repository uses Sproutboat for its development server.
 
 Pages include the home page, detailed features, and platform comparisons. The
 public roadmap links directly to the application repository's GitHub Issues.
