@@ -1,0 +1,185 @@
+---
+import externalLinkSvg from "lucide-static/icons/external-link.svg?raw";
+import Icon from "@/components/Icon.astro";
+import Logo from "@/components/Logo.astro";
+import Layout from "@/layouts/Layout.astro";
+
+const products = [
+  {
+    name: "Risulta",
+    release: "current checkout",
+    shape: "One native executable",
+    storage: "Embedded SQLite",
+    deploy: "One file and systemd",
+    binary: "5.8 MB on disk, Linux x86_64",
+    idle: "9 MiB, test process",
+    ram: "13 MiB peak RSS, one 15-second run",
+    source: "https://github.com/baronunread/risulta",
+  },
+  {
+    name: "GoatCounter",
+    release: "v2.7.0",
+    shape: "One Go service",
+    storage: "SQLite or PostgreSQL",
+    deploy: "Binary or Docker",
+    binary: "Image: 36.2 MB pulled",
+    idle: "Not captured",
+    ram: "Not captured",
+    source: "https://github.com/arp242/goatcounter",
+  },
+  {
+    name: "Umami",
+    release: "v3.4.0",
+    shape: "Node app and database",
+    storage: "PostgreSQL or MySQL",
+    deploy: "App container plus database",
+    binary: "App image: 1,050.8 MB pulled",
+    idle: "202 MiB, app + PostgreSQL",
+    ram: "310 MiB peak RSS, one 15-second run",
+    source: "https://github.com/umami-software/umami",
+  },
+  {
+    name: "Plausible CE",
+    release: "v3.2.1",
+    shape: "Web app and data services",
+    storage: "PostgreSQL and ClickHouse",
+    deploy: "Docker Compose stack",
+    binary: "Image: 168.5 MB pulled",
+    idle: "710 MiB, app + PostgreSQL + ClickHouse",
+    ram: "Not captured under load",
+    source: "https://github.com/plausible/community-edition",
+  },
+  {
+    name: "Mrkr",
+    release: "Hosted product",
+    shape: "Managed service",
+    storage: "Vendor hosted",
+    deploy: "Script tag, no self-hosted edition",
+    binary: "Not applicable",
+    idle: "Not applicable",
+    ram: "Not applicable",
+    source: "https://mrkr.app/",
+  },
+];
+---
+
+<Layout
+  title="Self-hosted web analytics comparison | Risulta"
+  description="Compare Risulta with GoatCounter, Umami, Plausible Community Edition, and Mrkr on features, deployment stack, and measured memory."
+>
+  <header class="mx-auto flex max-w-6xl items-center justify-between px-6 py-8 sm:px-10">
+    <a class="flex items-center gap-2 font-semibold" href="/"><Logo class="size-5" />Risulta</a>
+    <nav aria-label="Main navigation" class="hidden gap-5 text-sm text-muted-foreground sm:flex">
+      <a href="/#features">Features</a>
+      <a href="/#sproutboat">Sproutboat</a>
+      <a aria-current="page" class="text-foreground" href="/compare/">Compare</a>
+      <a href="/#github">GitHub</a>
+    </nav>
+  </header>
+  <main class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+    <section class="border-b py-14 sm:py-20">
+      <h1 class="max-w-3xl text-5xl font-semibold tracking-tight sm:text-7xl">Choose analytics by what you need.</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
+        A feature-first look at privacy-friendly analytics, followed by the real stack each self-hosted option asks you to run.
+      </p>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2">
+        <article class="rounded-2xl bg-foreground p-6 text-background">
+          <p class="text-sm text-background/65">Risulta executable, Linux x86_64</p>
+          <p class="mt-5 font-mono text-6xl font-semibold tracking-tight">5.8 <span class="text-2xl">MB</span></p>
+          <p class="mt-3 text-sm text-background/70">Built from this checkout. Raw file size, not compressed download size.</p>
+        </article>
+        <article class="rounded-2xl border bg-card p-6">
+          <p class="text-sm text-muted-foreground">Peak RAM under pageview load</p>
+          <p class="mt-5 font-mono text-6xl font-semibold tracking-tight">13 <span class="text-2xl">MiB</span></p>
+          <p class="mt-3 text-sm leading-6 text-muted-foreground">
+            Peak process RSS in a 15-second run with 25 concurrent clients.
+          </p>
+        </article>
+      </div>
+      <p class="mt-4 text-xs leading-5 text-muted-foreground">Executable size and container image size are different measures. The comparison table keeps them separate.</p>
+    </section>
+
+    <section class="py-16">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 class="text-3xl font-semibold tracking-tight">Features side by side</h2>
+        </div>
+        <p class="max-w-md text-sm leading-6 text-muted-foreground">A practical feature map. Mrkr is included as a hosted product, not a self-hosted OSS option.</p>
+      </div>
+      <div class="mt-8 overflow-x-auto rounded-2xl border">
+        <table class="w-full min-w-[900px] border-collapse text-left text-sm">
+          <thead class="bg-muted/70 text-muted-foreground">
+            <tr>
+              <th class="p-4 font-medium">Capability</th><th class="border-x border-foreground/15 bg-foreground/[0.06] p-4 font-semibold text-foreground">Risulta</th><th class="p-4 font-medium">GoatCounter</th><th class="p-4 font-medium">Umami</th><th class="p-4 font-medium">Plausible CE</th><th class="p-4 font-medium">Mrkr</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ["Cookie-free visitor analytics", "Yes", "Yes", "Yes", "Yes", "Yes by default"],
+              ["Multiple websites", "Yes", "Yes", "Yes", "Yes", "Yes"],
+              ["Custom events", "Yes", "Yes", "Yes", "Yes", "Yes"],
+              ["Goals and conversions", "Goals", "Custom events", "Goals", "Goals", "Goals"],
+              ["Funnels and journeys", "Funnels", "No", "Funnels and journeys", "Not confirmed for CE", "Funnels and journeys"],
+              ["Campaign attribution", "UTM sources and campaigns", "UTM campaigns", "UTM campaigns", "Campaign reports", "Sources and campaigns"],
+              ["CSV or data export", "CSV and JSON reports", "CSV and JSON exports", "Data export", "CSV exports", "On request, self-service planned"],
+              ["Session replay and heatmaps", "No", "No", "Yes", "No", "Yes"],
+              ["MCP server for analytics assistants", "No", "No", "Yes", "No", "Yes"],
+              ["First-party proxy for tracker delivery", "No", "No", "No", "No", "Yes"],
+              ["AI crawler analytics", "No", "No", "Not confirmed", "No", "Yes"],
+              ["Revenue attribution", "Event values, no revenue report", "No", "Revenue insights", "Not confirmed for CE", "Revenue by source and campaign"],
+              ["Core Web Vitals", "No", "No", "Yes", "No", "Yes"],
+              ["Cohorts and retention", "No", "No", "Yes", "Not confirmed for CE", "Yes"],
+              ["Live visitor view", "Live overview", "Realtime stats", "Realtime reports", "Realtime dashboard", "Live map, refreshes every 5 seconds"],
+            ].map(([capability, ...values]) => (
+              <tr class="border-t align-top">
+                <th scope="row" class="p-4 font-medium">{capability}</th>
+                {values.map((value, index) => <td class:list={["p-4", index === 0 ? "border-x border-foreground/15 bg-foreground/[0.035] font-medium text-foreground" : "text-muted-foreground"]}>{value}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-sm leading-6 text-muted-foreground">RAM sampled on Ubuntu 26.04 x86_64. Loaded figures use one 15-second run with 25 concurrent clients. Plausible's figure is its idle stack.</p>
+      <p class="mt-4 text-sm leading-6 text-muted-foreground">
+        Feature availability checked against product documentation and release pages. Mrkr's homepage describes a hosted proprietary service. Plausible CE is distinct from the commercial product, so edition-specific funnel and revenue availability is left unconfirmed.
+      </p>
+      <div class="mt-8 grid gap-5 rounded-2xl bg-muted/60 p-6 sm:grid-cols-[0.8fr_1.2fr] sm:p-8">
+        <h3 class="text-2xl font-semibold tracking-tight">Where Risulta is still lean</h3>
+        <div>
+          <p class="text-sm leading-6 text-muted-foreground">Risulta covers traffic reports, goals, funnels, exports, and backups. It does not yet have session replay, heatmaps, an MCP server, first-party proxy delivery, AI crawler analytics, Core Web Vitals, cohorts, or retention reports. If those are part of your workflow, Umami or Mrkr currently offers more built-in analysis.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t py-16">
+      <h2 class="text-3xl font-semibold tracking-tight">Then, the stack you operate</h2>
+      <p class="mt-4 max-w-2xl leading-7 text-muted-foreground">
+        These are the documented default deployment shapes. Artifact sizes below are local Docker image sizes for the exact OSS releases we downloaded, except Risulta, which is the Linux executable size. Mrkr runs as a managed service, so it has no local artifact or server RAM requirement.
+      </p>
+      <div class="mt-8 overflow-x-auto rounded-2xl border">
+        <table class="w-full min-w-[900px] border-collapse text-left text-sm">
+          <thead class="bg-muted/70 text-muted-foreground"><tr><th class="p-4 font-medium">Product and release</th><th class="p-4 font-medium">App and storage</th><th class="p-4 font-medium">Install shape</th><th class="p-4 font-medium">Artifact</th><th class="p-4 font-medium">Measured RAM</th></tr></thead>
+          <tbody>{products.map((product) => <tr class:list={["border-t align-top", product.name === "Risulta" && "bg-foreground/[0.035]"]}><th scope="row" class:list={["p-4 font-semibold", product.name === "Risulta" && "border-l-2 border-foreground"]}><a class="underline decoration-muted-foreground/40 underline-offset-4" href={product.source}>{product.name}</a><span class="mt-1 block font-mono text-xs font-normal text-muted-foreground">{product.release}</span></th><td class="p-4">{product.shape}<span class="mt-1 block text-muted-foreground">{product.storage}</span></td><td class="p-4">{product.deploy}</td><td class="p-4">{product.binary}</td><td class="p-4">{product.idle}<span class="mt-1 block text-muted-foreground">{product.ram}</span></td></tr>)}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="grid gap-5 border-t py-16 md:grid-cols-2">
+      <div>
+        <h2 class="mt-3 text-3xl font-semibold tracking-tight">Pick the tool that fits your work.</h2>
+      </div>
+      <div class="space-y-5 text-sm leading-6 text-muted-foreground">
+        <p><strong class="text-foreground">Plausible</strong> leads with a concise dashboard and campaign reports, with PostgreSQL and ClickHouse in its Community Edition stack.</p>
+        <p><strong class="text-foreground">Umami</strong> includes broader product analytics such as funnels, journeys, replay, and web vitals, with an app plus PostgreSQL or MySQL.</p>
+        <p><strong class="text-foreground">GoatCounter</strong> is a focused, privacy-friendly counter designed around a compact Go service and SQLite or PostgreSQL.</p>
+        <p><strong class="text-foreground">Risulta</strong> puts the dashboard, collector, and embedded SQLite database in one executable, with a systemd installer for small Linux servers.</p>
+        <p><strong class="text-foreground">Mrkr</strong> demonstrates a stronger marketing story: live visitor activity, campaign-to-revenue attribution, replay, and a live demo. Its FAQ says data export is currently handled by request, and it is hosted rather than self-hosted.</p>
+      </div>
+    </section>
+
+    <section class="flex flex-wrap items-center justify-between gap-5 rounded-2xl bg-muted/60 p-7 sm:p-10">
+      <div><p class="text-sm text-muted-foreground">Try the single-file install</p><h2 class="mt-2 text-2xl font-semibold tracking-tight">Your analytics can fit in one process.</h2></div>
+      <a class="inline-flex items-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-sm font-medium text-background" href="/">Get Risulta <Icon svg={externalLinkSvg} class="size-4" /></a>
+    </section>
+  </main>
+</Layout>
