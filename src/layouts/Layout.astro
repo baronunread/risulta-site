@@ -6,9 +6,14 @@ interface Props {
   description?: string;
 }
 
+const SITE_URL = "https://risulta.dev";
+const canonicalPath = Astro.url.pathname === "/" ? "/" : `${Astro.url.pathname.replace(/\/+$/, "")}/`;
+const canonicalUrl = `${SITE_URL}${canonicalPath}`;
+const isHomePage = canonicalPath === "/";
+
 const {
-  title = "Risulta - Self-hosted web analytics in one binary",
-  description = "The smallest self-hosted web analytics you can run: a single 4.6 MB binary, no Docker, no database container.",
+  title = "Risulta | Self-hosted web analytics in one executable",
+  description = "Self-hosted, cookie-free web analytics in one native executable with embedded SQLite and no separate database service.",
 } = Astro.props;
 ---
 
@@ -47,36 +52,39 @@ const {
       }
     </style>
     <title>{title}</title>
-    <link rel="canonical" href="https://risulta.pages.dev/" />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <meta name="description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://risulta.pages.dev/" />
+    <meta property="og:site_name" content="Risulta" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="A single 4.6 MB binary serves the dashboard, collects pageviews, and keeps every site in its own SQLite file. No cookies, no Docker." />
-    <meta property="og:image" content="https://risulta.pages.dev/og.png" />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://risulta.dev/og-v2.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Risulta: private web analytics in one executable" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content="A single 4.6 MB binary serves the dashboard, collects pageviews, and keeps every site in its own SQLite file. No cookies, no Docker." />
-    <meta name="twitter:image" content="https://risulta.pages.dev/og.png" />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://risulta.dev/og-v2.png" />
+    <meta name="twitter:image:alt" content="Risulta: private web analytics in one executable" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    {isHomePage && <script type="application/ld+json" is:inline set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       name: "Risulta",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Linux",
-      url: "https://risulta.pages.dev/",
-      description: "Self-hosted, cookie-free web analytics that runs as a single 4.6 MB binary.",
-      softwareVersion: "0.1.6",
+      url: "https://risulta.dev/",
+      description: "Self-hosted, cookie-free web analytics in one native executable with embedded SQLite.",
       license: "https://www.gnu.org/licenses/agpl-3.0.html",
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    })} />
+    })} />}
     <script defer is:inline src="https://stats.brnr.dev/js/397f485532e940cad72fc704b2cd78e9.js"></script>
   </head>
   <body>
