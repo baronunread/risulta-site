@@ -24,7 +24,7 @@
         "oxlint": "1.80.0",
         "prettier": "^3.8.3",
         "prettier-plugin-tailwindcss": "^0.8.0",
-        "style-doctor": "^0.3.0",
+        "style-doctor": "^0.4.4",
         "typescript": "~6",
       },
     },
@@ -922,7 +922,7 @@
 
     "strip-ansi": ["strip-ansi@7.2.0", "", { "dependencies": { "ansi-regex": "^6.2.2" } }, "sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w=="],
 
-    "style-doctor": ["style-doctor@0.3.0", "", { "bin": { "style-doctor": "cli.js" } }, "sha512-9g5D5q+v6AdzNQ2m5RpC5Qw01dflMGiWeo+2E0lBU4QyL1ENUKhi8cGM8JT4L9TdtK62VXj2EEGjtRaXEN94fA=="],
+    "style-doctor": ["style-doctor@0.4.4", "", { "bin": { "style-doctor": "cli.js" } }, "sha512-xjSYoLviI2E3rFa2qCFvCPrwwX0XxQ4EaC75ysl36so/jwMKqzXBmcRH9eUvKtq46em7Tb94NX3OIG7NAbXA6Q=="],
 
     "svgo": ["svgo@4.1.0", "", { "dependencies": { "commander": "^11.1.0", "css-select": "^6.0.0", "css-tree": "^3.0.1", "css-what": "^7.0.0", "csso": "^5.0.5", "picocolors": "^1.1.1", "sax": "1.6.1" }, "bin": { "svgo": "bin/svgo.js" } }, "sha512-bkxnTg1kSU0guhIBmibA6UUhrQmPVA1XsQLN+ylCd+UWzbnLkySOcXpyk1mrl05f+pcaCx2eHb+sp6BgMZWX+Q=="],
 
