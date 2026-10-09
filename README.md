@@ -2,8 +2,8 @@
 
 The static, multi-page website for [Risulta](https://github.com/baronunread/risulta).
 
-The installer source is maintained in the app repository at
-`deploy/install.sh` and published at `/install.sh` by the Pages site. Copy the
+The app repository maintains the installer source at
+`deploy/install.sh`. The Pages site publishes it at `/install.sh`. Copy the
 updated installer into `public/install.sh` when publishing app installer
 changes.
 
@@ -62,11 +62,11 @@ The installer supports an existing reverse proxy or direct HTTP for private
 and development networks.
 
 Use `sudo risulta update` for subsequent stable updates. Use
-`sudo risulta update --channel nightly` to opt into nightlies. The selected
-channel is saved on the server.
+`sudo risulta update --channel nightly` to opt into nightlies. The server saves the selected
+channel.
 
 ## Publish
 
-GitHub Pages deploys on pushes to `main`. For a custom domain, configure it in
-the repository’s Pages settings; the command shown on the page automatically
+Cloudflare Pages deploys on pushes to `main`. Configure custom domains in
+the Cloudflare Pages project; the command shown on the page automatically
 uses the site’s current HTTPS origin.

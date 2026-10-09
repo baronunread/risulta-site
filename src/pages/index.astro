@@ -13,31 +13,30 @@ import starSvg from "lucide-static/icons/star.svg?raw";
 import targetSvg from "lucide-static/icons/target.svg?raw";
 
 import Button from "@/components/Button.astro";
-import Card from "@/components/Card.astro";
-import CardHeader from "@/components/CardHeader.astro";
-import CardTitle from "@/components/CardTitle.astro";
 import Icon from "@/components/Icon.astro";
 import Logo from "@/components/Logo.astro";
 import Layout from "@/layouts/Layout.astro";
 
-const VERSION = "v0.1.8";
+const VERSION = "v0.2.0";
+const WIDGET_ORIGIN = import.meta.env.PUBLIC_WIDGET_ORIGIN || "https://stats.brnr.dev";
+const WIDGET_SITE = import.meta.env.PUBLIC_WIDGET_SITE || "397f485532e940cad72fc704b2cd78e9";
 const INSTALL_COMMAND = "curl -fsSL https://risulta.dev/install.sh | sudo sh";
 
 const features = [
   {
     svg: activitySvg,
     title: "Collector and dashboard",
-    description: "Track pageviews and review reports from the same small server.",
+    description: "Track pageviews, then add dated notes to explain traffic changes.",
   },
   {
     svg: globeSvg,
     title: "Multiple websites",
-    description: "Give every website its own tracker key, reports, and access controls.",
+    description: "Connect each website with a guided setup and its own access controls.",
   },
   {
     svg: shieldCheckSvg,
     title: "Cookie-free visitor counts",
-    description: "Anonymous, daily-scoped hashes instead of browser identifiers.",
+    description: "Count daily visitors without cookies or persistent browser identifiers.",
   },
   {
     svg: targetSvg,
@@ -47,20 +46,15 @@ const features = [
   {
     svg: fileDownSvg,
     title: "Exportable reports",
-    description: "Bounded JSON and CSV reports with filters, dimensions, and pagination.",
+    description: "Export filtered reports as JSON or CSV.",
   },
   {
     svg: databaseBackupSvg,
     title: "Online backups",
-    description: "One authenticated call snapshots SQLite with an integrity-checked manifest.",
+    description: "Create and schedule SQLite backups from the same executable.",
   },
 ];
 
-const differences = [
-  ["One executable", "Dashboard, collector, and authentication together."],
-  ["Embedded SQLite", "No PostgreSQL, ClickHouse, or managed database."],
-  ["Small tracker", "A pageview-only script without a product suite."],
-];
 ---
 
 <Layout>
@@ -77,237 +71,128 @@ const differences = [
     </nav>
   </header>
   <main class="mx-auto max-w-6xl px-6 sm:px-10">
-    <section class="relative overflow-hidden py-16 sm:py-20">
-      <Logo
-        class="pointer-events-none absolute -top-16 -right-24 -z-10 size-[26rem] text-foreground/[0.03] sm:size-[34rem]"
-      />
-      <div class="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+    <section aria-labelledby="hero-title" class="py-12 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24">
+      <div class="grid items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
         <div class="min-w-0">
-          <div class="fade-1 flex flex-wrap items-center gap-3 text-sm font-medium text-muted-foreground">
-            <a
-              class="rounded-full border px-2.5 py-1 text-xs text-foreground transition hover:bg-accent"
-              href={`https://github.com/baronunread/risulta/releases/tag/${VERSION}`}
-            >
-              {VERSION}
+          <h1 id="hero-title" class="fade-1 text-[clamp(2.5rem,5vw,4rem)] leading-[1.06] font-medium tracking-[-0.045em]">
+            <span class="block">Private analytics.</span>
+            <span class="block">One small binary.</span>
+          </h1>
+          <p class="fade-2 mt-6 max-w-[400px] text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Understand your website's traffic. Run it on your own server, with SQLite built in.
+          </p>
+          <div class="fade-3 mt-8 flex items-center gap-6">
+            <Button href="#install" class="h-11 px-5">Get started</Button>
+            <a class="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground" href="https://github.com/baronunread/risulta">
+              Source code
+              <Icon svg={externalLinkSvg} class="size-3.5" />
             </a>
           </div>
-          <h1 class="mt-5 text-5xl font-semibold tracking-tight sm:text-6xl">
-            Private web analytics in one small process.
-          </h1>
-          <p class="fade-2 mt-6 max-w-md text-lg text-muted-foreground">
-            One native executable, embedded SQLite, and no database service to operate. Keep analytics on your own
-            server without adding another stack.
-          </p>
-          <div id="install" class="fade-3 mt-8 rounded-xl border bg-card p-4 shadow-sm">
-            <p class="text-sm font-medium">Install or update on Debian or Ubuntu</p>
-            <p class="mt-1 text-sm leading-6 text-muted-foreground">
-              Downloads and verifies the latest release, then installs the Risulta systemd service. After installation,
-              run <code>sudo risulta update</code> for updates or <code>sudo risulta update --channel nightly</code> to
-              follow nightly builds.
-            </p>
-            <div
-              class="mt-4 flex flex-col gap-3 rounded-lg bg-background p-3 text-foreground sm:flex-row sm:items-center sm:justify-between"
-            >
-              <code class="min-w-0 overflow-x-auto whitespace-nowrap text-sm">
-                {INSTALL_COMMAND}
-              </code>
-              <Button
-                id="copy-install-btn"
-                data-command={INSTALL_COMMAND}
-                class="group/copy w-full shrink-0 justify-center sm:w-34"
-                size="sm"
-                variant="secondary"
-              >
-                <span class="hidden items-center gap-1.5 group-data-[copied]/copy:flex">
-                  <Icon svg={checkSvg} />
-                  Copied
-                </span>
-                <span class="flex items-center gap-1.5 group-data-[copied]/copy:hidden">
-                  <Icon svg={copySvg} />
-                  Copy command
-                </span>
-              </Button>
-            </div>
-          </div>
-          <div class="fade-3 mt-4 flex flex-wrap items-center gap-4">
-            <Button variant="outline" href="https://github.com/baronunread/risulta">
-              <Icon svg={externalLinkSvg} />
-              Source code
-            </Button>
-            <p class="text-sm text-muted-foreground">AGPL-3.0 server and dashboard; MIT tracker script.</p>
-          </div>
         </div>
-        <div class="fade-3 lg:justify-self-end lg:w-full lg:max-w-md">
-          <div class="grid grid-cols-2 overflow-hidden rounded-2xl border bg-card">
-            <div class="border-r p-5 sm:p-6">
-              <p class="text-xs font-medium text-muted-foreground">Linux binary</p>
-              <p class="mt-5 font-mono text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl">5.8</p>
-              <p class="mt-1 font-mono text-sm text-muted-foreground">MB · x86_64</p>
-              <p class="mt-4 text-xs text-muted-foreground">one file on disk</p>
-            </div>
-            <div class="p-5 sm:p-6">
-              <p class="text-xs font-medium text-muted-foreground">Peak RAM</p>
-              <p class="mt-5 font-mono text-5xl font-semibold tracking-tight tabular-nums sm:text-6xl">13</p>
-              <p class="mt-1 font-mono text-sm text-muted-foreground">MiB · Linux x86_64</p>
-              <p class="mt-4 text-xs text-muted-foreground">25 clients · 15 sec</p>
-            </div>
-            <div class="col-span-2 flex items-center justify-between border-t px-5 py-3 text-xs text-muted-foreground sm:px-6">
-              <span>Linux x86_64 · 25 clients</span>
-              <a class="font-medium text-foreground underline decoration-muted-foreground/40 underline-offset-4" href="/compare/">See the comparison</a>
-            </div>
+        <section id="live-traffic" aria-labelledby="live-traffic-title" class="fade-3 min-w-0 lg:justify-self-end lg:w-full lg:max-w-[480px]">
+          <h2 id="live-traffic-title" class="mb-4 text-xs font-medium text-muted-foreground">Live traffic on risulta.dev</h2>
+          <div class="min-h-[238px]">
+            <script is:inline async src={`${WIDGET_ORIGIN}/widget.js`} data-site={WIDGET_SITE} data-size="wide" data-theme="auto"></script>
+            <noscript><p class="text-sm text-muted-foreground">Enable JavaScript to view this website's live traffic.</p></noscript>
           </div>
-          <p class="mt-3 text-xs leading-5 text-muted-foreground">RAM is peak sampled process RSS during one 15-second pageview run. Binary is the current Linux x86_64 build file size.</p>
-        </div>
+          <p class="mt-4 max-w-sm text-xs leading-relaxed text-muted-foreground">Your traffic, out in the open. Embed a live widget on your website. Choose a compact badge, card, or wide layout from Settings.</p>
+        </section>
       </div>
     </section>
-    <section class="reveal pb-24">
-      <figure class="overflow-hidden rounded-xl border bg-card shadow-xl shadow-black/10">
-        <div class="flex items-center gap-1.5 border-b bg-muted px-3 py-2.5">
-          <span class="size-2.5 rounded-full bg-foreground/15" />
-          <span class="size-2.5 rounded-full bg-foreground/15" />
-          <span class="size-2.5 rounded-full bg-foreground/15" />
-        </div>
+    <section class="pb-12 sm:pb-16">
+      <figure class="overflow-hidden rounded-xl border bg-card">
         <img
-          alt="Risulta dashboard: seven-day visitor trend, top pages, and traffic sources"
-          class="block h-auto w-full"
-          width={1600}
-          height={1681}
+          alt="Risulta dashboard showing visitors, visits, pageviews, and a seven-day traffic chart"
+          class="block aspect-[4/3] w-full object-cover object-top sm:aspect-[16/11]"
+          width={1280}
+          height={1332}
           loading="lazy"
           decoding="async"
           src={`${import.meta.env.BASE_URL}risulta-dashboard.png`}
         />
       </figure>
     </section>
-    <section id="features" class="reveal py-24">
-      <h2 class="mt-4 max-w-lg text-4xl font-semibold tracking-tight">What ships in the binary</h2>
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <section id="features" aria-labelledby="features-title" class="py-16 sm:py-24">
+      <h2 id="features-title" class="max-w-lg text-3xl leading-tight font-medium tracking-tight sm:text-4xl">Everything you need to understand your traffic.</h2>
+      <div class="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
         {
           features.map(({ svg, title, description }) => (
-            <Card>
-              <CardHeader class="gap-3 py-5">
-                <div class="flex size-9 items-center justify-center rounded-lg border bg-accent">
-                  <Icon svg={svg} class="size-4.5" />
-                </div>
-                <CardTitle class="text-base">{title}</CardTitle>
-                <p class="text-sm leading-6 text-muted-foreground">{description}</p>
-              </CardHeader>
-            </Card>
-          ))
-        }
-      </div>
-    </section>
-    <section id="sproutboat" class="reveal py-24">
-      <div class="grid gap-8 md:grid-cols-[1fr_1fr] md:items-center">
-        <div>
-          <h2 class="max-w-lg text-4xl font-semibold tracking-tight">Built as a binary using Sproutboat.</h2>
-          <p class="mt-4 max-w-lg text-muted-foreground">
-            Risulta compiles from a Workers-style <code class="rounded bg-muted px-1.5 py-0.5 text-sm">fetch</code>
-            handler straight into one native Linux binary through Porffor and Zig. No Node runtime, no Docker, no
-            bundler config ships with it.
-          </p>
-          <p class="mt-4 max-w-lg text-muted-foreground">
-            Sproutboat is the toolchain behind that build. Risulta is the real product proving it holds up: the same
-            router, storage, and dashboard you can read end to end, running as one file.
-          </p>
-          <a
-            class="mt-6 inline-flex items-center gap-1 text-sm font-medium underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground"
-            href="https://sproutboat.com"
-          >
-            Read about sproutboat
-            <Icon svg={externalLinkSvg} class="size-3.5" />
-          </a>
-        </div>
-        <div class="rounded-xl border bg-card p-6 font-mono text-sm leading-7 text-muted-foreground">
-          <p class="text-foreground">src/index.js</p>
-          <p class="mt-3"><span class="text-muted-foreground/70">export default</span> {"{"}</p>
-          <p class="pl-4">fetch(request) {"{"}</p>
-          <p class="pl-8">return routeRequest(request);</p>
-          <p class="pl-4">{"}"},</p>
-          <p>{"}"};</p>
-          <p class="mt-4 text-muted-foreground/70"># sproutboat build --standalone</p>
-          <p class="text-foreground">&check; dist/risulta-sprout, one file, no runtime</p>
-        </div>
-      </div>
-    </section>
-    <section id="compare" class="reveal grid gap-6 border-t py-20 md:grid-cols-[1fr_1.5fr]">
-      <div>
-        <h2 class="mt-4 text-4xl font-semibold tracking-tight">No analytics stack to operate.</h2>
-        <p class="mt-4 text-muted-foreground">
-          Self-hosted tools make different operational tradeoffs. Plausible's official stack uses PostgreSQL and ClickHouse, while Umami connects its app to PostgreSQL. Risulta keeps analytics in embedded SQLite behind one executable. We downloaded and ran the official releases to compare their actual footprint.
-        </p>
-      </div>
-      <div class="grid gap-4 sm:grid-cols-3">
-        {
-          differences.map(([title, description]) => (
-            <div class="border-t pt-5">
-              <h3 class="font-semibold">{title}</h3>
-              <p class="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+            <div>
+              <Icon svg={svg} class="mb-4 size-5 text-muted-foreground" />
+              <h3 class="text-base font-medium">{title}</h3>
+              <p class="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">{description}</p>
             </div>
           ))
         }
       </div>
-      <a class="mt-6 inline-flex items-center gap-2 text-sm font-medium underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground" href="/compare/">Open the measured comparison page <Icon svg={externalLinkSvg} class="size-3.5" /></a>
     </section>
-    <section class="reveal rounded-2xl border bg-card px-8 py-14 text-center sm:px-16">
-      <h2 class="text-4xl font-semibold tracking-tight">Run your own analytics today.</h2>
-      <p class="mx-auto mt-3 max-w-md text-muted-foreground">
-        One command on a Debian or Ubuntu box, and you have a dashboard with no third party reading your traffic.
-      </p>
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button href="#install">
-          <Icon svg={copySvg} />
-          Get the install command
-        </Button>
-        <Button variant="outline" href="https://github.com/baronunread/risulta">
-          <Icon svg={externalLinkSvg} />
-          Read the source first
-        </Button>
-      </div>
-    </section>
-    <section id="live-traffic" class="border-t py-16 sm:py-20">
-      <div class="grid items-center gap-10 lg:grid-cols-[1fr_560px]">
+    <section id="sproutboat" aria-labelledby="sproutboat-title" class="border-t py-16 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
         <div>
-          <p class="text-sm text-muted-foreground">Live on risulta.dev</p>
-          <h2 class="mt-3 max-w-md text-3xl font-semibold tracking-tight">This website, measured by Risulta.</h2>
-          <p class="mt-4 max-w-md leading-relaxed text-muted-foreground">Our own traffic, shared openly. A small widget you can add to your website, too.</p>
-          <p class="mt-3 text-xs text-muted-foreground">Anonymous daily visitor counts. Refreshed every minute.</p>
+          <h2 id="sproutboat-title" class="text-3xl leading-tight font-medium tracking-tight sm:text-4xl">Built with Sproutboat.</h2>
+          <p class="mt-5 max-w-md leading-relaxed text-muted-foreground">A Workers-style fetch handler, compiled into one native executable. The router, storage, and dashboard ship together.</p>
+          <a class="mt-6 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground" href="https://sproutboat.com">
+            Explore the toolchain <Icon svg={externalLinkSvg} class="size-3.5" />
+          </a>
         </div>
-        <div class="min-w-0">
-          <script is:inline async src="https://stats.brnr.dev/widget.js" data-site="397f485532e940cad72fc704b2cd78e9" data-size="wide" data-theme="auto"></script>
-          <noscript><p class="text-sm text-muted-foreground">Enable JavaScript to view this website's live traffic.</p></noscript>
+        <div class="min-w-0 rounded-xl bg-muted/40 p-6 sm:p-8">
+          <pre class="overflow-x-auto text-sm leading-7 text-muted-foreground"><code><span class="text-foreground">export default</span> {"{"}
+  fetch(request) {"{"}
+    return routeRequest(request);
+  {"}"}
+{"}"};</code></pre>
+          <p class="mt-6 border-t pt-5 font-mono text-xs text-muted-foreground">sproutboat build --standalone</p>
         </div>
       </div>
     </section>
-    <section id="github" class="reveal py-24">
-      <h2 class="mt-4 max-w-lg text-4xl font-semibold tracking-tight">All of it is open source.</h2>
-      <p class="mt-4 max-w-lg text-muted-foreground">
-        The server, dashboard, tracker, and installer all live in one public repository under AGPL-3.0 (the tracker
-        script is MIT).
-      </p>
-      <div class="mt-8 grid gap-4 sm:grid-cols-3">
-        <a
-          class="group flex flex-col gap-2 rounded-xl border p-5 transition hover:bg-accent"
-          href="https://github.com/baronunread/risulta"
-        >
-          <Icon svg={gitForkSvg} class="size-4.5 text-muted-foreground" />
-          <span class="font-medium">baronunread/risulta</span>
-          <span class="text-sm text-muted-foreground">Tiny, privacy-friendly multi-site web analytics in one binary.</span>
+    <section id="compare" aria-labelledby="compare-title" class="border-t py-16 sm:py-24">
+      <h2 id="compare-title" class="text-3xl leading-tight font-medium tracking-tight sm:text-4xl">A small footprint, measured.</h2>
+      <p class="mt-5 max-w-lg leading-relaxed text-muted-foreground">Embedded SQLite keeps your data in the same process. We ran Risulta alongside other analytics tools to compare their footprint.</p>
+      <dl class="mt-10 grid max-w-lg grid-cols-2 gap-8">
+        <div>
+          <dt class="text-sm text-muted-foreground">Linux binary</dt>
+          <dd class="mt-3 text-5xl font-medium tracking-tight tabular-nums">5.8 <span class="text-lg font-normal text-muted-foreground">MB</span></dd>
+        </div>
+        <div>
+          <dt class="text-sm text-muted-foreground">Peak RAM</dt>
+          <dd class="mt-3 text-5xl font-medium tracking-tight tabular-nums">13 <span class="text-lg font-normal text-muted-foreground">MiB</span></dd>
+        </div>
+      </dl>
+      <p class="mt-6 text-xs leading-relaxed text-muted-foreground">Linux x86_64. Peak process RSS during a 15-second pageview run with 25 clients.</p>
+      <a class="mt-4 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground" href="/compare/">See the measured comparison <Icon svg={externalLinkSvg} class="size-3.5" /></a>
+    </section>
+    <section id="install" aria-labelledby="install-title" class="border-t py-16 sm:py-24">
+      <div class="max-w-2xl">
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+          <h2 id="install-title" class="text-3xl leading-tight font-medium tracking-tight sm:text-4xl">Run Risulta on your server.</h2>
+          <a class="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground" href={`https://github.com/baronunread/risulta/releases/tag/${VERSION}`}>{VERSION}</a>
+        </div>
+        <p class="mt-5 leading-relaxed text-muted-foreground">One command on Debian or Ubuntu. The installer verifies the release and sets up the Risulta systemd service.</p>
+        <div class="mt-8 flex min-w-0 flex-col gap-4 rounded-xl border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <code class="min-w-0 overflow-x-auto whitespace-nowrap text-sm">{INSTALL_COMMAND}</code>
+          <Button id="copy-install-btn" data-command={INSTALL_COMMAND} class="group/copy h-10 w-full shrink-0 justify-center sm:w-auto" variant="secondary">
+            <span class="hidden items-center gap-1.5 group-data-[copied]/copy:flex"><Icon svg={checkSvg} />Copied</span>
+            <span class="flex items-center gap-1.5 group-data-[copied]/copy:hidden"><Icon svg={copySvg} />Copy command</span>
+          </Button>
+        </div>
+        <details class="mt-5 text-sm text-muted-foreground">
+          <summary class="w-fit cursor-pointer py-2 transition-colors hover:text-foreground">Updating an existing installation</summary>
+          <p class="mt-3 leading-relaxed">Run <code class="text-foreground">sudo risulta update</code> for stable releases, or <code class="text-foreground">sudo risulta update --channel nightly</code> to follow nightly builds.</p>
+        </details>
+      </div>
+    </section>
+    <section id="github" aria-labelledby="github-title" class="border-t py-16 sm:py-24">
+      <h2 id="github-title" class="text-3xl leading-tight font-medium tracking-tight sm:text-4xl">Open source, end to end.</h2>
+      <p class="mt-5 max-w-lg leading-relaxed text-muted-foreground">Read the code, follow development, or make it your own. AGPL-3.0 for the server and dashboard; MIT for the tracker.</p>
+      <div class="mt-10 grid gap-2 sm:grid-cols-3 sm:gap-8">
+        <a class="group flex min-h-16 items-center gap-3 rounded-lg py-3 text-sm transition-colors hover:text-muted-foreground" href="https://github.com/baronunread/risulta">
+          <Icon svg={gitForkSvg} class="size-4 text-muted-foreground" />Source code<Icon svg={externalLinkSvg} class="ml-auto size-3.5 text-muted-foreground" />
         </a>
-        <a
-          class="group flex flex-col gap-2 rounded-xl border p-5 transition hover:bg-accent"
-          href="https://github.com/baronunread/risulta/issues"
-        >
-          <Icon svg={circleDotSvg} class="size-4.5 text-muted-foreground" />
-          <span class="font-medium">Issues and roadmap</span>
-          <span class="text-sm text-muted-foreground">What's tracked, what's next, and where to file a bug.</span>
+        <a class="group flex min-h-16 items-center gap-3 rounded-lg py-3 text-sm transition-colors hover:text-muted-foreground" href="https://github.com/baronunread/risulta/issues">
+          <Icon svg={circleDotSvg} class="size-4 text-muted-foreground" />Issues and roadmap<Icon svg={externalLinkSvg} class="ml-auto size-3.5 text-muted-foreground" />
         </a>
-        <a
-          class="group flex flex-col gap-2 rounded-xl border p-5 transition hover:bg-accent"
-          href="https://github.com/baronunread/risulta/releases"
-        >
-          <Icon svg={starSvg} class="size-4.5 text-muted-foreground" />
-          <span class="font-medium">Releases</span>
-          <span class="text-sm text-muted-foreground">Checksummed Linux x64 and arm64 binaries, one tag at a time.</span>
+        <a class="group flex min-h-16 items-center gap-3 rounded-lg py-3 text-sm transition-colors hover:text-muted-foreground" href="https://github.com/baronunread/risulta/releases">
+          <Icon svg={starSvg} class="size-4 text-muted-foreground" />Releases<Icon svg={externalLinkSvg} class="ml-auto size-3.5 text-muted-foreground" />
         </a>
       </div>
     </section>
