@@ -1,0 +1,20 @@
+---
+import Button from "@/components/Button.astro";
+import Logo from "@/components/Logo.astro";
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Page not found | Risulta" description="This page does not exist." noindex>
+  <header class="mx-auto flex max-w-6xl items-center justify-between px-6 py-8 sm:px-10">
+    <a class="flex items-center gap-2 font-semibold" href="/"><Logo class="size-5" />Risulta</a>
+  </header>
+  <main class="mx-auto max-w-6xl px-6 sm:px-10">
+    <section class="py-12 sm:pt-16 sm:pb-20 lg:pt-20 lg:pb-24">
+      <h1 class="max-w-3xl text-[clamp(2.5rem,5vw,4rem)] leading-[1.06] font-medium tracking-[-0.045em]">Page not found.</h1>
+      <p class="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">The page you asked for does not exist, or it moved.</p>
+      <div class="mt-8">
+        <Button href="/" class="h-11 px-5">Back to the home page</Button>
+      </div>
+    </section>
+  </main>
+</Layout>

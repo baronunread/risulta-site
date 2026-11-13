@@ -1,0 +1,13 @@
+# Cloudflare Pages and Sproutboat Cloud both read this file from the root of the published
+# directory. Pages adds these first three itself; Sproutboat does not, so they are stated here.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Astro fingerprints everything under /_astro/, so it can be cached forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Show the installer in the browser (people read it before piping it to sh) instead of downloading it.
+/install.sh
+  Content-Type: text/plain; charset=utf-8
