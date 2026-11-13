@@ -76,7 +76,7 @@ uses the site’s current HTTPS origin.
 The same `dist/` also deploys to Sproutboat Cloud. `sproutboat.jsonc` publishes `dist/` as static assets
 (`not_found_handling: "404-page"`, so unknown paths get `404.html` with a 404 status), and `src/worker.js`
 is the handler Sproutboat requires, which only hands unmatched paths to the asset store. `public/_headers` is
-read by both hosts (Pages ignores nothing in it; Sproutboat applies it at the edge). Do not add a `_redirects`
+read by both hosts (Pages applies it natively, Sproutboat at its edge). Do not add a `_redirects`
 rule such as `/compare /compare/`: Sproutboat matches redirect sources without regard to a trailing slash, so it loops.
 
 ```sh
