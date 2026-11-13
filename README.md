@@ -70,3 +70,20 @@ channel.
 Cloudflare Pages deploys on pushes to `main`. Configure custom domains in
 the Cloudflare Pages project; the command shown on the page automatically
 uses the site’s current HTTPS origin.
+
+### Sproutboat Cloud
+
+The same `dist/` also deploys to Sproutboat Cloud. `sproutboat.jsonc` publishes `dist/` as static assets
+(`not_found_handling: "404-page"`, so unknown paths get `404.html` with a 404 status), and `src/worker.js`
+is the handler Sproutboat requires, which only hands unmatched paths to the asset store. `public/_headers` is
+read by both hosts (Pages ignores nothing in it; Sproutboat applies it at the edge). Do not add a `_redirects`
+rule such as `/compare /compare/`: Sproutboat matches redirect sources without regard to a trailing slash, so it loops.
+
+```sh
+bun run build
+sproutboat dev --ip 0.0.0.0     # preview, serves dist/ (needs a CLI with --ip)
+sproutboat deploy               # https://risulta-site.<team>.sproutboat.app
+```
+
+The cutover of `risulta.dev` from Cloudflare is documented in the private `risulta-cloud` repository
+(`deploy/risulta-dev-site.md`).

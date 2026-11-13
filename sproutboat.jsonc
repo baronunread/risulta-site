@@ -1,0 +1,13 @@
+{
+  "$schema": "https://sproutboat.com/schema.json",
+  // Static site: `bun run build` writes dist/, Sproutboat serves it.
+  // Cloudflare Pages keeps deploying the same dist/ until the DNS cutover.
+  "name": "risulta-site",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-12",
+  "assets": {
+    "directory": "dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+  },
+}
